@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\mwsha\OneDrive\Documents\CS-499\Shaper3D\thirdparty\glad\src\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\mwsha\OneDrive\Documents\CS-499\Shaper3D\thirdparty\glad\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{0FBFE977-A4F6-3D6F-9167-626CF7AC6D0F}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

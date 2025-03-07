@@ -1,0 +1,14 @@
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/CMakeFiles/Shaper3D.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/CMakeFiles/ALL_BUILD.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/CMakeFiles/ZERO_CHECK.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/thirdparty/glfw-3.3.2/CMakeFiles/ALL_BUILD.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/thirdparty/glfw-3.3.2/src/CMakeFiles/glfw.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/thirdparty/glad/CMakeFiles/glad.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/thirdparty/glad/CMakeFiles/ALL_BUILD.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/thirdparty/stb_image/CMakeFiles/stb_image.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/thirdparty/stb_image/CMakeFiles/ALL_BUILD.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/thirdparty/stb_truetype/CMakeFiles/stb_truetype.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/thirdparty/stb_truetype/CMakeFiles/ALL_BUILD.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/thirdparty/glm/CMakeFiles/ALL_BUILD.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/thirdparty/imgui-docking/CMakeFiles/imgui.dir
+C:/Users/mwsha/OneDrive/Documents/CS-499/Shaper3D/thirdparty/imgui-docking/CMakeFiles/ALL_BUILD.dir
