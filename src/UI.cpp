@@ -66,7 +66,8 @@ void UI::renderUI(GLFWwindow* window)
 
 	ImGuiID dockspace_id = ImGui::GetID("DockSpace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
+	loginUI();
 	ImGui::End();
 
 
@@ -89,6 +90,26 @@ void UI::renderUI(GLFWwindow* window)
 		ImGui::RenderPlatformWindowsDefault();
 		glfwMakeContextCurrent(backup_current_context);
 	}
+}
+
+void UI::loginUI()
+{
+    static char username[128] = "";
+    static char password[128] = "";
+   
+    ImGui::Begin("Login");
+    
+    ImGui::InputText("Username", username, IM_ARRAYSIZE(username));
+    
+    // Input field for the password with hidden text
+    ImGui::InputText("Password", password, IM_ARRAYSIZE(password), ImGuiInputTextFlags_Password);
+    
+    if (ImGui::Button("Login")) 
+	{
+        
+    }
+    
+    ImGui::End();
 }
 
 void UI::terminateUI()

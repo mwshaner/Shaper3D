@@ -11,6 +11,7 @@ public:
 	void initUIContext(GLFWwindow* window);
 	void newUIFrame();
 	void renderUI(GLFWwindow* window);
+	void loginUI();
 	void terminateUI();
 
 private:
