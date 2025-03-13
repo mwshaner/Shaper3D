@@ -38,7 +38,7 @@ set_property(TARGET "${CMAKE_PROJECT_NAME}" PROPERTY CXX_STANDARD 17)
 target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="./resources/") # Uncomment this line to setup the ASSETS_PATH macro to the final assets directory when you share the game
 
 
-target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${MY_SOURCES} )
+target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${MY_SOURCES}  "src/View.h" "src/Controller.h" "src/View.cpp")
 
 
 if(MSVC) # If using the VS compiler...

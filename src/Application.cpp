@@ -15,7 +15,8 @@
 #include "Material.h"
 #include "Renderer.h"
 #include "DB.h"
-#include "UI.h"
+//#include "UI.h"
+#include "View.h"
 
 /*
 	Application.cpp
@@ -92,11 +93,10 @@ glm::mat4 UGetProjectionMatrix();
 
 
 
-
 // Main
 int main(int argc, char* argv[])
 {
-	typedef std::tuple<std::string, std::string, std::string> user_record;
+	typedef std::tuple<std::string, std::string, std::string> userRecord;
 
 	if (!UInitialize(argc, argv, &gWindow))
 	{
@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
 	database.connect();
 
 	std::string sql = "SELECT * from USERS";
-	std::vector< user_record > records;
+	std::vector< userRecord > records;
 
 	database.initialize_database();
 	database.run_query(sql, records);
@@ -180,10 +180,11 @@ int main(int argc, char* argv[])
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     
-	UI gui{ gWindow, io };
+	//UI gui{ gWindow, io };
+	LoginView gui{ gWindow, io };
 	
 
-
+	//gui.renderUI(gWindow);
 
 	// RENDER LOOP START
 	while (!glfwWindowShouldClose(gWindow))
@@ -194,7 +195,7 @@ int main(int argc, char* argv[])
 		lastFrame = currentFrame;
 
 
-		gui.newUIFrame();
+		//gui.newUIFrame();
 
 		// Process user input
 		UProcessInput(gWindow);
@@ -256,8 +257,8 @@ int main(int argc, char* argv[])
 
 		Material wall2Mat(glm::vec3(0.24725f, 0.1995f, 0.0745f), glm::vec3(0.75164f, 0.60648f, 0.22648f), glm::vec3(1.0f, 1.0f, 1.0f), 2.0f);
 		renderer.drawMesh(wall2, shaderProgram, camera, wall2Mat);*/
-		
-		gui.renderUI(gWindow);
+
+		gui.render();
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(gWindow);

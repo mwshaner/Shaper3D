@@ -69,7 +69,7 @@ int DB::closeDB()
     return 1;
 }
 
-bool DB::run_query(std::string& sql, std::vector<user_record>& records)
+bool DB::run_query(std::string& sql, std::vector<userRecord>& records)
 {
     // Clear any prior results
     records.clear();
@@ -96,8 +96,8 @@ int DB::callback(void* possible_vector, int argc, char** argv, char** azColName)
     }
     else
     {
-        std::vector< user_record >* rows =
-            static_cast<std::vector< user_record > *>(possible_vector);
+        std::vector< userRecord >* rows =
+            static_cast<std::vector< userRecord > *>(possible_vector);
 
         rows->push_back(std::make_tuple(argv[0], argv[1], argv[2]));
     }

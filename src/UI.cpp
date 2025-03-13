@@ -43,7 +43,7 @@ void UI::newUIFrame()
 	ImGui::NewFrame();
 }
 
-void UI::renderUI(GLFWwindow* window)
+void UI::renderUI(GLFWwindow* window, void (*funcPtr)())
 {
 	// Transparent dockspace
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -61,13 +61,21 @@ void UI::renderUI(GLFWwindow* window)
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	
+	
 	ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
 	ImGui::PopStyleVar(3);
 
 	ImGuiID dockspace_id = ImGui::GetID("DockSpace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
 	//ImGui::ShowDemoWindow();
-	loginUI();
+	
+	
+	
+	//loginUI();
+	funcPtr();
+	
+	
 	ImGui::End();
 
 

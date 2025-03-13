@@ -13,8 +13,8 @@ public:
 	bool initialize_database();
 	int closeDB();
 	static int callback(void* possible_vector, int argc, char** argv, char** azColName);
-	typedef std::tuple<std::string, std::string, std::string> user_record;
-	bool run_query(std::string& sql, std::vector< user_record >& records);
+	typedef std::tuple<std::string, std::string, std::string> userRecord;
+	bool run_query(std::string& sql, std::vector< userRecord >& records);
 
 private:
 	sqlite3* m_db;
