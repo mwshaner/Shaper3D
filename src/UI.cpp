@@ -108,6 +108,10 @@ void UI::loginUI()
 	{
         
     }
+	if (ImGui::Button("Create Account"))
+	{
+
+	}
     
     ImGui::End();
 }

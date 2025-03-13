@@ -25,7 +25,7 @@ bool DB::initialize_database()
     char* error_message = NULL;
     std::string sql = "CREATE TABLE USERS(" \
         "ID INT PRIMARY KEY     NOT NULL," \
-        "NAME           TEXT    NOT NULL," \
+        "USERNAME           TEXT    NOT NULL," \
         "PASSWORD       TEXT    NOT NULL);";
 
     int result = sqlite3_exec(m_db, sql.c_str(), callback, NULL, &error_message);
@@ -38,14 +38,14 @@ bool DB::initialize_database()
     std::cout << "USERS table created." << std::endl;
 
     // insert some dummy data
-    sql = "INSERT INTO USERS (ID, NAME, PASSWORD)" \
-        "VALUES (1, 'Fred', 'Flinstone');" \
-        "INSERT INTO USERS (ID, NAME, PASSWORD)" \
-        "VALUES (2, 'Barney', 'Rubble');" \
-        "INSERT INTO USERS (ID, NAME, PASSWORD)" \
-        "VALUES (3, 'Wilma', 'Flinstone');" \
-        "INSERT INTO USERS (ID, NAME, PASSWORD)" \
-        "VALUES (4, 'Betty', 'Rubble');";
+    sql = "INSERT INTO USERS (ID, USERNAME, PASSWORD)" \
+        "VALUES (1, 'Mason', '12345');" \
+        "INSERT INTO USERS (ID, USERNAME, PASSWORD)" \
+        "VALUES (2, 'Winston', '12345');" \
+        "INSERT INTO USERS (ID, USERNAME, PASSWORD)" \
+        "VALUES (3, 'Teddy', '12345');" \
+        "INSERT INTO USERS (ID, USERNAME, PASSWORD)" \
+        "VALUES (4, 'Jimmy', '12345');";
 
     result = sqlite3_exec(m_db, sql.c_str(), callback, NULL, &error_message);
     if (result != SQLITE_OK)

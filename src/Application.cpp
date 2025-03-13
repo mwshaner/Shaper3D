@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
 
 	for (auto record : records)
 	{
-		std::cout << "User: " << std::get<1>(record) << " [UID=" << std::get<0>(record) << " PWD=" << std::get<2>(record) << "]" << std::endl;
+		std::cout << "User: " << std::get<1>(record) << " ID = " << std::get<0>(record) << " PASSWORD = " << std::get<2>(record) << " " << std::endl;
 	}
 
 	Renderer renderer;
@@ -123,45 +123,45 @@ int main(int argc, char* argv[])
 	// Cube and cylinder mesh objects
 	Mesh lightCube;
 	Mesh soda;
-	Mesh coaster;
-	Mesh kiss;
-	Mesh table;
-	Mesh chapstick;
-	Mesh rubikscube;
-	Mesh wall1;
-	Mesh wall2;
+	//Mesh coaster;
+	//Mesh kiss;
+	//Mesh table;
+	//Mesh chapstick;
+	//Mesh rubikscube;
+	//Mesh wall1;
+	//Mesh wall2;
 	
 	// Create the different meshes
 	soda.createCylinder(36, 3.0f, 1.0f);
-	coaster.createCube(0.5f, 0.5f, 0.05f);
-	kiss.createPyramid(0.5, 0.5, 0.5);
-	table.createPlane(30.0, 30.0);
-	chapstick.createCylinder(36, 5.0f, 1.0f);
-	rubikscube.createCube(0.5f, 0.5f, 0.5f);
+	//coaster.createCube(0.5f, 0.5f, 0.05f);
+	//kiss.createPyramid(0.5, 0.5, 0.5);
+	//table.createPlane(30.0, 30.0);
+	//chapstick.createCylinder(36, 5.0f, 1.0f);
+	//rubikscube.createCube(0.5f, 0.5f, 0.5f);
 	lightCube.createCube(0.5f, 0.5f, 0.5f);
-	wall1.createPlane(30.0, 30.0);
-	wall2.createPlane(30.0, 30.0);
+	//wall1.createPlane(30.0, 30.0);
+	//wall2.createPlane(30.0, 30.0);
 
 
 	// Send the textures to the mesh objects
-	const char* tex1FileName = "../../../Textures/hersheyKiss.png";
-	kiss.createTexture(1, tex1FileName);
-	const char* tex2FileName = "../../../Textures/coastertop.png";
-	coaster.createTexture(1, tex2FileName);
-	const char* tex3FileName = "../../../Textures/table.jpg";
-	table.createTexture(1, tex3FileName);
+	//const char* tex1FileName = "../../../Textures/hersheyKiss.png";
+	//kiss.createTexture(1, tex1FileName);
+	//const char* tex2FileName = "../../../Textures/coastertop.png";
+	//coaster.createTexture(1, tex2FileName);
+	//const char* tex3FileName = "../../../Textures/table.jpg";
+	//table.createTexture(1, tex3FileName);
 	const char* tex4FileName = "../../../Textures/coke.png";
 	const char* tex5FileName = "../../../Textures/sodacaps.png";
 	soda.createTexture(2, tex4FileName, tex5FileName);
-	const char* tex6FileName = "../../../Textures/chapstick.png";
-	const char* tex7FileName = "../../../Textures/chapstickcap.png";
-	chapstick.createTexture(2, tex6FileName, tex7FileName);
-	const char* tex8FileName = "../../../Textures/rubikscube.jpg";
-	rubikscube.createTexture(1, tex8FileName);
-	const char* tex9FileName = "../../../Textures/walls.png";
-	wall1.createTexture(1, tex9FileName);
-	const char* tex10FileName = "../../../Textures/walls2.png";
-	wall2.createTexture(1, tex10FileName);
+	//const char* tex6FileName = "../../../Textures/chapstick.png";
+	//const char* tex7FileName = "../../../Textures/chapstickcap.png";
+	//chapstick.createTexture(2, tex6FileName, tex7FileName);
+	//const char* tex8FileName = "../../../Textures/rubikscube.jpg";
+	//rubikscube.createTexture(1, tex8FileName);
+	//const char* tex9FileName = "../../../Textures/walls.png";
+	//wall1.createTexture(1, tex9FileName);
+	//const char* tex10FileName = "../../../Textures/walls2.png";
+	//wall2.createTexture(1, tex10FileName);
 
 	// Create the shader program
 	shaderProgram.load(cubeVertexShaderSource, cubeFragmentShaderSource);
@@ -207,16 +207,16 @@ int main(int argc, char* argv[])
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Apply all transformations
-		table.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f)));
-		coaster.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 3.0f)));
-		coaster.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -1.9f, 0.0f)));
+		//table.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f)));
+		//coaster.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 3.0f)));
+		//coaster.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -1.9f, 0.0f)));
 		soda.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0f, 0.0f)));
 		soda.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
-		chapstick.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(0.4f, 0.4f, 0.4f)));
-		chapstick.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-		chapstick.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -1.6f, -2.0f)));
-		kiss.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -1.5f, 0.0f)));
-		rubikscube.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, -1.5f, 0.0f)));
+		//chapstick.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(0.4f, 0.4f, 0.4f)));
+		//chapstick.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+		//chapstick.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -1.6f, -2.0f)));
+		//kiss.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -1.5f, 0.0f)));
+		//rubikscube.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, -1.5f, 0.0f)));
 		//wall1.rotateMesh(glm::rotate(glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
 		//wall1.translateMesh(glm::translate(glm::vec3(-30.0f, 28.0f, 0.0f)));
 
@@ -233,23 +233,23 @@ int main(int argc, char* argv[])
 		renderer.drawLights(shaderProgram, camera);
 
 		// Draw all of the mesh objects
-		Material coasterMat(glm::vec3(0.25f, 0.20725f, 0.20725f), glm::vec3(1.0f, 0.829f, 0.829f), glm::vec3(0.296648f, 0.296648f, 0.296648f), 1.5f);
-		renderer.drawMesh(coaster, shaderProgram, camera, coasterMat);
+		//Material coasterMat(glm::vec3(0.25f, 0.20725f, 0.20725f), glm::vec3(1.0f, 0.829f, 0.829f), glm::vec3(0.296648f, 0.296648f, 0.296648f), 1.5f);
+		//renderer.drawMesh(coaster, shaderProgram, camera, coasterMat);
 
 		Material sodaMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(0.7f, 0.6f, 0.6f), 0.25f);
 		renderer.drawMesh(soda, shaderProgram, camera, sodaMat);
 
-		Material kissMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
-		renderer.drawMesh(kiss, shaderProgram, camera, kissMat);
+		//Material kissMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
+		//renderer.drawMesh(kiss, shaderProgram, camera, kissMat);
 
-		Material tableMat(glm::vec3(0.24725f, 0.1995f, 0.0745f), glm::vec3(0.75164f, 0.60648f, 0.22648f), glm::vec3(1.0f, 1.0f, 1.0f), 2.0f);
-		renderer.drawMesh(table, shaderProgram, camera, tableMat);
+		//Material tableMat(glm::vec3(0.24725f, 0.1995f, 0.0745f), glm::vec3(0.75164f, 0.60648f, 0.22648f), glm::vec3(1.0f, 1.0f, 1.0f), 2.0f);
+		//renderer.drawMesh(table, shaderProgram, camera, tableMat);
 
-		Material chapstickMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.01f, 0.01f, 0.01f), glm::vec3(0.5f, 0.5f, 0.5f), 0.25f);
-		renderer.drawMesh(chapstick, shaderProgram, camera, chapstickMat);
+		//Material chapstickMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.01f, 0.01f, 0.01f), glm::vec3(0.5f, 0.5f, 0.5f), 0.25f);
+		//renderer.drawMesh(chapstick, shaderProgram, camera, chapstickMat);
 
-		Material rubikscubeMat(glm::vec3(1.0f, 0.5f, 0.31f), glm::vec3(1.0f, 0.5f, 0.31f), glm::vec3(0.5f, 0.5f, 0.5f), 0.25f);
-		renderer.drawMesh(rubikscube, shaderProgram, camera, rubikscubeMat);
+		//Material rubikscubeMat(glm::vec3(1.0f, 0.5f, 0.31f), glm::vec3(1.0f, 0.5f, 0.31f), glm::vec3(0.5f, 0.5f, 0.5f), 0.25f);
+		//renderer.drawMesh(rubikscube, shaderProgram, camera, rubikscubeMat);
 
 		/*Material wall1Mat(glm::vec3(0.24725f, 0.1995f, 0.0745f), glm::vec3(0.75164f, 0.60648f, 0.22648f), glm::vec3(1.0f, 1.0f, 1.0f), 2.0f);
 		renderer.drawMesh(wall1, shaderProgram, camera, wall1Mat);
