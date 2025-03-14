@@ -8,12 +8,14 @@
 class UI
 {
 public:
-	UI(GLFWwindow* window, ImGuiIO& io);
+	UI(GLFWwindow* window);
 	void initUIContext(GLFWwindow* window);
 	void newUIFrame();
+	bool renderUI(GLFWwindow* window, bool (*funcPtr)());
 	void renderUI(GLFWwindow* window, void (*funcPtr)());
 	void loginUI();
 	void terminateUI();
+	ImGuiIO& getIO() { return m_io; }
 
 private:
 	ImGuiIO& m_io;

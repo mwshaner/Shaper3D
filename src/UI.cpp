@@ -1,7 +1,7 @@
 #include "UI.h"
 
-UI::UI(GLFWwindow* window, ImGuiIO& io)
-	: m_io{ io },
+UI::UI(GLFWwindow* window)
+	: m_io{ [&]() -> ImGuiIO& { ImGui::CreateContext(); return ImGui::GetIO(); } () }, // lambda initializes m_io to ImGuiIO&
 	  m_glslVersion{ "#version 100" }
 {
 	m_io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
@@ -43,7 +43,7 @@ void UI::newUIFrame()
 	ImGui::NewFrame();
 }
 
-void UI::renderUI(GLFWwindow* window, void (*funcPtr)())
+bool UI::renderUI(GLFWwindow* window, bool (*funcPtr)())
 {
 	// Transparent dockspace
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -68,14 +68,63 @@ void UI::renderUI(GLFWwindow* window, void (*funcPtr)())
 
 	ImGuiID dockspace_id = ImGui::GetID("DockSpace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
-	//ImGui::ShowDemoWindow();
-	
-	
 	
 	//loginUI();
+	bool result = funcPtr();
+	ImGui::End();
+
+
+	// Rendering
+	ImGui::Render();
+	int display_w, display_h;
+	glfwGetFramebufferSize(window, &display_w, &display_h);
+	//glViewport(0, 0, display_w, display_h);
+	//glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+	//glClear(GL_COLOR_BUFFER_BIT);
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+	// Update and Render additional Platform Windows
+	// (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+	//  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+	if (m_io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		GLFWwindow* backup_current_context = glfwGetCurrentContext();
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+		glfwMakeContextCurrent(backup_current_context);
+	}
+
+	return result;
+}
+
+void UI::renderUI(GLFWwindow* window, void (*funcPtr)())
+{
+	// Transparent dockspace
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->WorkPos);
+	ImGui::SetNextWindowSize(viewport->WorkSize);
+	ImGui::SetNextWindowViewport(viewport->ID);
+
+	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+	ImGuiWindowFlags host_window_flags = 0;
+	host_window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDocking;
+	host_window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+		host_window_flags |= ImGuiWindowFlags_NoBackground;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+
+	ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
+	ImGui::PopStyleVar(3);
+
+	ImGuiID dockspace_id = ImGui::GetID("DockSpace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
+
+	//loginUI();
 	funcPtr();
-	
-	
 	ImGui::End();
 
 

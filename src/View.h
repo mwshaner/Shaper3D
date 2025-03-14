@@ -1,30 +1,53 @@
 #pragma once
 #include "UI.h"
+#include <iostream>
 #include "Controller.h"
 
 namespace 
 {
-	void login()
+	bool login()
 	{
-		static char username[128] = "";
-		static char password[128] = "";
+		static std::string username(128, '\0');
+		static std::string password(128, '\0');
+		static std::string storedUsername;
+		static std::string storedPassword;
+		std::string pass = "123";
 
 		ImGui::Begin("Login");
 
-		ImGui::InputText("Username", username, IM_ARRAYSIZE(username));
+		ImGui::InputText("Username", &username[0], username.size());
 
-		// Input field for the password with hidden text
-		ImGui::InputText("Password", password, IM_ARRAYSIZE(password), ImGuiInputTextFlags_Password);
+		ImGui::InputText("Password", &password[0], password.size(), ImGuiInputTextFlags_Password);
 
 		if (ImGui::Button("Login"))
 		{
+			storedUsername = username;
+			storedPassword = password;
 
+			storedPassword = storedPassword.c_str();
+
+			if (storedPassword == pass)
+			{
+				std::cout << "SUCESS\n";
+				ImGui::End();
+				return true;
+			}
 		}
+
 		if (ImGui::Button("Create Account"))
 		{
-
+			storedUsername = username;
+			storedPassword = password;
 		}
 
+		ImGui::End();
+		return false;
+	}
+
+	void meshProperties()
+	{
+		ImGui::Begin("Demo");
+		ImGui::ShowDemoWindow();
 		ImGui::End();
 	}
 }
@@ -40,21 +63,23 @@ public:
 class LoginView : IView
 {
 public:
-	LoginView(GLFWwindow* window, ImGuiIO& io);
-	void render();
+	LoginView(GLFWwindow* window, UI backend);
+	void render() override;
+	bool getLoginStatus() { return m_loginStatus; }
 
 private:
 	UI m_uiBackend;
 	//Controller m_controller;
 	GLFWwindow* m_window;
 	ImGuiIO& m_io;
+	bool m_loginStatus;
 };
 
 class MeshView : public IView
 {
 public:
-	MeshView(GLFWwindow* window, ImGuiIO& io);
-	void render();
+	MeshView(GLFWwindow* window, UI backend);
+	void render() override;
 
 private:
 	UI m_uiBackend;
