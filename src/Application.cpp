@@ -17,6 +17,7 @@
 #include "DB.h"
 //#include "UI.h"
 #include "View.h"
+#include "Controller.h"
 
 /*
 	Application.cpp
@@ -104,7 +105,7 @@ int main(int argc, char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	DB database;
+	/*DB database;
 
 	database.connect();
 
@@ -117,7 +118,7 @@ int main(int argc, char* argv[])
 	for (auto record : records)
 	{
 		std::cout << "User: " << std::get<1>(record) << " ID = " << std::get<0>(record) << " PASSWORD = " << std::get<2>(record) << " " << std::endl;
-	}
+	}*/
 
 	Renderer renderer;
 
@@ -176,19 +177,15 @@ int main(int argc, char* argv[])
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 
-	// Setup Dear ImGui context
-	//IMGUI_CHECKVERSION();
-   //ImGui::CreateContext();
-   //ImGuiIO& io = ImGui::GetIO(); (void)io;
-
 	static UI guiBackend{ gWindow };
-    
-	//UI gui{ gWindow, io };
+	DB model;
 	LoginView loginView{ gWindow, guiBackend };
+	LoginController loginCntlr{ loginView, model };
 	MeshView meshView{ gWindow, guiBackend };
+
+	loginCntlr.query();
 	
 
-	//gui.renderUI(gWindow);
 
 	// RENDER LOOP START
 	while (!glfwWindowShouldClose(gWindow))
@@ -283,7 +280,7 @@ int main(int argc, char* argv[])
 
 	glfwDestroyWindow(gWindow);
 	glfwTerminate();
-	database.closeDB();
+	//database.closeDB();
 	exit(EXIT_SUCCESS); // Sucessful program termination
 }
 
@@ -457,28 +454,28 @@ void UMouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 	{
 	case GLFW_MOUSE_BUTTON_LEFT:
 	{
-		if (action == GLFW_PRESS)
+		/*if (action == GLFW_PRESS)
 			cout << "Left mouse button pressed" << endl;
 		else
-			cout << "Left mouse button released" << endl;
+			cout << "Left mouse button released" << endl;*/
 	}
 	break;
 
 	case GLFW_MOUSE_BUTTON_MIDDLE:
 	{
-		if (action == GLFW_PRESS)
+		/*if (action == GLFW_PRESS)
 			cout << "Middle mouse button pressed" << endl;
 		else
-			cout << "Middle mouse button released" << endl;
+			cout << "Middle mouse button released" << endl;*/
 	}
 	break;
 
 	case GLFW_MOUSE_BUTTON_RIGHT:
 	{
-		if (action == GLFW_PRESS)
+		/*if (action == GLFW_PRESS)
 			cout << "Right mouse button pressed" << endl;
 		else
-			cout << "Right mouse button released" << endl;
+			cout << "Right mouse button released" << endl;*/
 	}
 	break;
 

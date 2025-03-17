@@ -1,7 +1,7 @@
 #include "DB.h"
 
 DB::DB()
-    : m_db{ NULL }
+    : m_db{ nullptr }
 {
  
 }

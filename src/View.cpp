@@ -9,7 +9,7 @@
 
 LoginView::LoginView(GLFWwindow* window, UI backend)
     : m_uiBackend{ backend },
-     //m_controller{},
+      //m_controller{},
       m_window{ window },
       m_io{ m_uiBackend.getIO() },
       m_loginStatus{ false }
@@ -24,6 +24,7 @@ void LoginView::render()
     m_uiBackend.newUIFrame();
     m_loginStatus = m_uiBackend.renderUI(m_window, funcPtr);
 }
+
 
 
 /*

@@ -1,17 +1,21 @@
 #pragma once
 #include "UI.h"
 #include <iostream>
-#include "Controller.h"
+//#include "Controller.h"
 
 namespace 
 {
+
+	typedef std::tuple<std::string, std::string, std::string> userRecord;
+	
+
 	bool login()
 	{
 		static std::string username(128, '\0');
 		static std::string password(128, '\0');
 		static std::string storedUsername;
 		static std::string storedPassword;
-		std::string pass = "123";
+		std::string pass = "12345";
 
 		ImGui::Begin("Login");
 
@@ -28,7 +32,7 @@ namespace
 
 			if (storedPassword == pass)
 			{
-				std::cout << "SUCESS\n";
+				//std::cout << "SUCESS\n";
 				ImGui::End();
 				return true;
 			}
@@ -46,25 +50,24 @@ namespace
 
 	void meshProperties()
 	{
-		ImGui::Begin("Demo");
 		ImGui::ShowDemoWindow();
-		ImGui::End();
 	}
 }
 
-class IView
-{
-public:
-	IView() = default;
-	virtual ~IView() = default;
-	virtual void render() = 0;
-};
+//class IView
+//{
+//public:
+//	IView() = default;
+//	virtual ~IView() = default;
+//	virtual void render();
+//};
 
-class LoginView : IView
+class LoginView 
 {
 public:
 	LoginView(GLFWwindow* window, UI backend);
-	void render() override;
+	void render();
+	void loginWindow();
 	bool getLoginStatus() { return m_loginStatus; }
 
 private:
@@ -75,11 +78,11 @@ private:
 	bool m_loginStatus;
 };
 
-class MeshView : public IView
+class MeshView
 {
 public:
 	MeshView(GLFWwindow* window, UI backend);
-	void render() override;
+	void render();
 
 private:
 	UI m_uiBackend;
