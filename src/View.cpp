@@ -39,12 +39,12 @@ void LoginView::render()
 ----------------------------------------------------------------
 */
 
-MeshView::MeshView(GLFWwindow* window, UI backend)
+MeshView::MeshView(GLFWwindow* window, UI backend, std::vector<meshObject>& meshes)
     : m_uiBackend{ backend },
       //  m_controller{},
       m_window{ window },
       m_io{ m_uiBackend.getIO() },
-      m_meshes{  }
+      m_meshes{ meshes }
 {
 
 }

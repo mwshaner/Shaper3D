@@ -76,6 +76,7 @@ namespace
 	const char* cubeFragmentShaderSource = "../../../resources/cubeFrag.fs";
 
 	bool keyState = false;
+	std::vector<meshObject> meshes;
 }
 
 
@@ -104,21 +105,6 @@ int main(int argc, char* argv[])
 	{
 		return EXIT_FAILURE;
 	}
-
-	/*DB database;
-
-	database.connect();
-
-	std::string sql = "SELECT * from USERS";
-	std::vector< userRecord > records;
-
-	database.initialize_database();
-	database.run_query(sql, records);
-
-	for (auto record : records)
-	{
-		std::cout << "User: " << std::get<1>(record) << " ID = " << std::get<0>(record) << " PASSWORD = " << std::get<2>(record) << " " << std::endl;
-	}*/
 
 	Renderer renderer;
 
@@ -176,16 +162,18 @@ int main(int argc, char* argv[])
 	const char* glsl_version = "#version 100";
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+	Material sodaMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(0.7f, 0.6f, 0.6f), 0.25f);
+
+	meshObject obj(soda, sodaMat);
+	meshes.push_back(obj);
 
 	static UI guiBackend{ gWindow };
 	DB model;
 	LoginView loginView{ gWindow, guiBackend };
 	LoginController loginCntlr{ loginView, model };
-	MeshView meshView{ gWindow, guiBackend };
+	MeshView meshView{ gWindow, guiBackend, meshes };
 
 	loginCntlr.query();
-	
-
 
 	// RENDER LOOP START
 	while (!glfwWindowShouldClose(gWindow))
@@ -211,8 +199,8 @@ int main(int argc, char* argv[])
 			//table.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f)));
 			//coaster.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 3.0f)));
 			//coaster.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -1.9f, 0.0f)));
-			soda.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0f, 0.0f)));
-			soda.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
+			//soda.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0f, 0.0f)));
+			//soda.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
 			//chapstick.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(0.4f, 0.4f, 0.4f)));
 			//chapstick.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
 			//chapstick.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -1.6f, -2.0f)));
@@ -237,8 +225,13 @@ int main(int argc, char* argv[])
 			//Material coasterMat(glm::vec3(0.25f, 0.20725f, 0.20725f), glm::vec3(1.0f, 0.829f, 0.829f), glm::vec3(0.296648f, 0.296648f, 0.296648f), 1.5f);
 			//renderer.drawMesh(coaster, shaderProgram, camera, coasterMat);
 
-			Material sodaMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(0.7f, 0.6f, 0.6f), 0.25f);
-			renderer.drawMesh(soda, shaderProgram, camera, sodaMat);
+			for (auto& object : meshes)
+			{
+				renderer.drawMesh(object.m_mesh, shaderProgram, camera, object.m_mat);
+			}
+			
+			
+
 
 			//Material kissMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
 			//renderer.drawMesh(kiss, shaderProgram, camera, kissMat);

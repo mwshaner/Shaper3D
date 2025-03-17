@@ -92,15 +92,17 @@ namespace
 		return false;
 	}
 
-	void meshProperties(std::vector<Object>& meshes)
+	void meshProperties(std::vector<meshObject>& meshes)
 	{
+		static float x = 0, y = 0, z = 0;
+
 		ImGui::Begin("Mesh Properties");
 
 		// Arrow buttons with Repeater
 		static int counter = 0;
 		float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
 		ImGui::PushButtonRepeat(true);
-		if (ImGui::ArrowButton("##left", ImGuiDir_Left) && counter > 0) 
+		if (ImGui::ArrowButton("##left", ImGuiDir_Left) && counter >= 0) 
 		{ 
 			counter--; 
 		}
@@ -113,6 +115,18 @@ namespace
 		ImGui::PopButtonRepeat();
 		ImGui::SameLine();
 		ImGui::Text("%d", counter);
+
+		ImGui::Dummy(ImVec2(0, 400));
+
+		//soda.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
+
+
+		ImGui::InputFloat("Translate X", &x, -10000, 10000, "%.4f");
+		ImGui::InputFloat("Translate Y", &y, -10000, 10000, "%.4f");
+		ImGui::InputFloat("Translate Z", &z, -10000, 10000, "%.4f");
+
+		meshes.at(counter).m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z)));
+
 
 
 		ImGui::End();
@@ -146,7 +160,7 @@ private:
 class MeshView
 {
 public:
-	MeshView(GLFWwindow* window, UI backend);
+	MeshView(GLFWwindow* window, UI backend, std::vector<meshObject>& meshes);
 	void render();
 	//bool meshProperties();
 	//void addObject(Mesh& obj);
@@ -156,5 +170,5 @@ private:
 	//Controller m_controller;
 	GLFWwindow* m_window;
 	ImGuiIO& m_io;
-	std::vector<Object> m_meshes;
+	std::vector<meshObject>& m_meshes;
 };
