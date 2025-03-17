@@ -19,10 +19,16 @@ LoginView::LoginView(GLFWwindow* window, UI backend)
 
 void LoginView::render()
 {
-    bool (*funcPtr)() = &login;
+    /*bool (*funcPtr)() = &login;
 
     m_uiBackend.newUIFrame();
-    m_loginStatus = m_uiBackend.renderUI(m_window, funcPtr);
+    m_loginStatus = m_uiBackend.renderUI(m_window, funcPtr);*/
+
+    m_uiBackend.newUIFrame();
+    m_uiBackend.prepareDockspace();
+    m_loginStatus = login();
+    m_uiBackend.renderUI();
+
 }
 
 
@@ -37,18 +43,38 @@ MeshView::MeshView(GLFWwindow* window, UI backend)
     : m_uiBackend{ backend },
       //  m_controller{},
       m_window{ window },
-      m_io{ m_uiBackend.getIO() }
+      m_io{ m_uiBackend.getIO() },
+      m_meshes{  }
 {
 
 }
 
 void MeshView::render()
 {
-    void (*funcPtr)() = &meshProperties;
-
+    m_uiBackend.setFont(std::string("RudaBold25"));
     m_uiBackend.newUIFrame();
-    m_uiBackend.renderUI(m_window, funcPtr);
+    m_uiBackend.prepareDockspace();
+    meshProperties(m_meshes);
+    m_uiBackend.renderUI();
 }
+
+//bool MeshView::meshProperties()
+//{
+//    ImGui::Begin("Mesh Properties");
+//
+//    // Arrow buttons with Repeater
+//    static int counter = 0;
+//    float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
+//    ImGui::PushButtonRepeat(true);
+//    if (ImGui::ArrowButton("##left", ImGuiDir_Left) && counter >= 0) { counter--; }
+//    ImGui::SameLine(0.0f, spacing);
+//    if (ImGui::ArrowButton("##right", ImGuiDir_Right) && counter < 10) { counter++; }
+//    ImGui::PopButtonRepeat();
+//    ImGui::SameLine();
+//    ImGui::Text("%d", counter);
+//
+//    ImGui::End();
+//}
 
 //void MeshView::addObject(Mesh& obj)
 //{

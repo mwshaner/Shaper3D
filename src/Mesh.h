@@ -4,7 +4,6 @@
 #include <iostream>
 #include <cstdlib>
 #include <../thirdparty/glad/include/glad/glad.h>
-#include <../thirdparty/glfw-3.3.2/include/GLFW/glfw3.h>
 #include <../thirdparty/glm/glm/glm.hpp>
 #include <../thirdparty/glm/glm/ext/matrix_transform.hpp>
 #include <vector>

@@ -1,10 +1,13 @@
 #include "UI.h"
 
 UI::UI(GLFWwindow* window)
-	: m_io{ [&]() -> ImGuiIO& { ImGui::CreateContext(); return ImGui::GetIO(); } () }, // lambda initializes m_io to ImGuiIO&
+	: m_window{ window },
+	  m_io{ [&]() -> ImGuiIO& { ImGui::CreateContext(); return ImGui::GetIO(); } () }, // lambda initializes m_io to ImGuiIO&
 	  m_glslVersion{ "#version 100" },
-	  m_loginFont{ nullptr },
-	  m_uiFont{ nullptr }
+	  m_fonts{},
+	  m_currFont{ nullptr }
+	  //m_loginFont{ nullptr },
+	  //m_uiFont{ nullptr }
 {
 	m_io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	m_io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -14,8 +17,9 @@ UI::UI(GLFWwindow* window)
 
 	 // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	ImGuiStyle& style = ImGui::GetStyle();
-	m_loginFont = m_io.Fonts->AddFontFromFileTTF("../../../fonts/static/Ruda-Bold.ttf", 50.0f);
-	m_uiFont = m_io.Fonts->AddFontFromFileTTF("../../../fonts/static/Ruda-Bold.ttf", 25.0f);
+	m_fonts["RudaBold50"] = m_io.Fonts->AddFontFromFileTTF("../../../fonts/static/Ruda-Bold.ttf", 50.0f);
+	m_fonts["RudaBold25"] = m_io.Fonts->AddFontFromFileTTF("../../../fonts/static/Ruda-Bold.ttf", 25.0f);
+	m_currFont = m_fonts["RudaBold50"];
 
 	style.FrameRounding = 4.0f;
 	style.WindowBorderSize = 0.0f;
@@ -88,9 +92,31 @@ UI::UI(GLFWwindow* window)
 }
 
 
-void UI::initUIContext(GLFWwindow* window)
+void UI::prepareDockspace()
 {
-	
+	// Transparent dockspace
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->WorkPos);
+	ImGui::SetNextWindowSize(viewport->WorkSize);
+	ImGui::SetNextWindowViewport(viewport->ID);
+
+	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+	ImGuiWindowFlags host_window_flags = 0;
+	host_window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDocking;
+	host_window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+		host_window_flags |= ImGuiWindowFlags_NoBackground;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::PushFont(m_currFont);
+
+	ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
+
+
+	ImGuiID dockspace_id = ImGui::GetID("DockSpace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
 }
 
 void UI::newUIFrame()
@@ -101,97 +127,18 @@ void UI::newUIFrame()
 	ImGui::NewFrame();
 }
 
-bool UI::renderUI(GLFWwindow* window, bool (*funcPtr)())
+void UI::renderUI()
 {
-	// Transparent dockspace
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(viewport->WorkPos);
-	ImGui::SetNextWindowSize(viewport->WorkSize);
-	ImGui::SetNextWindowViewport(viewport->ID);
-
-	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
-	ImGuiWindowFlags host_window_flags = 0;
-	host_window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDocking;
-	host_window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-		host_window_flags |= ImGuiWindowFlags_NoBackground;
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-
-	ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
-
-	ImGuiID dockspace_id = ImGui::GetID("DockSpace");
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
-
-	//loginUI();
-	bool result = funcPtr();
+	// End the dockspace opened in prepareDockspace()
 	ImGui::End();
-
-	ImGui::PopStyleVar(3);
-
-
-	// Rendering
-	ImGui::Render();
-	int display_w, display_h;
-	glfwGetFramebufferSize(window, &display_w, &display_h);
-	//glViewport(0, 0, display_w, display_h);
-	//glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-	//glClear(GL_COLOR_BUFFER_BIT);
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-	// Update and Render additional Platform Windows
-	// (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-	//  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
-	if (m_io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		GLFWwindow* backup_current_context = glfwGetCurrentContext();
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		glfwMakeContextCurrent(backup_current_context);
-	}
-
-	return result;
-}
-
-void UI::renderUI(GLFWwindow* window, void (*funcPtr)())
-{
-	// Transparent dockspace
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(viewport->WorkPos);
-	ImGui::SetNextWindowSize(viewport->WorkSize);
-	ImGui::SetNextWindowViewport(viewport->ID);
-
-	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
-	ImGuiWindowFlags host_window_flags = 0;
-	host_window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDocking;
-	host_window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-		host_window_flags |= ImGuiWindowFlags_NoBackground;
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::PushFont(m_uiFont);
-
-	ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
-
-	ImGuiID dockspace_id = ImGui::GetID("DockSpace");
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
-
-	//loginUI();
-	funcPtr();
-	ImGui::End();
-
-	ImGui::PopStyleVar(3);
 	ImGui::PopFont();
 
+	ImGui::PopStyleVar(3);
 
-	// Rendering
+	// Renders the window defined in the view class
 	ImGui::Render();
 	int display_w, display_h;
-	glfwGetFramebufferSize(window, &display_w, &display_h);
+	glfwGetFramebufferSize(m_window, &display_w, &display_h);
 	//glViewport(0, 0, display_w, display_h);
 	//glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 	//glClear(GL_COLOR_BUFFER_BIT);
@@ -208,6 +155,60 @@ void UI::renderUI(GLFWwindow* window, void (*funcPtr)())
 		glfwMakeContextCurrent(backup_current_context);
 	}
 }
+
+//void UI::renderUI(GLFWwindow* window, void (*funcPtr)())
+//{
+//	// Transparent dockspace
+//	ImGuiViewport* viewport = ImGui::GetMainViewport();
+//	ImGui::SetNextWindowPos(viewport->WorkPos);
+//	ImGui::SetNextWindowSize(viewport->WorkSize);
+//	ImGui::SetNextWindowViewport(viewport->ID);
+//
+//	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+//	ImGuiWindowFlags host_window_flags = 0;
+//	host_window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDocking;
+//	host_window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+//	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
+//		host_window_flags |= ImGuiWindowFlags_NoBackground;
+//
+//	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+//	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+//	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+//	ImGui::PushFont(m_uiFont);
+//
+//	ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
+//
+//	ImGuiID dockspace_id = ImGui::GetID("DockSpace");
+//	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
+//
+//	//loginUI();
+//	funcPtr();
+//	ImGui::End();
+//
+//	ImGui::PopStyleVar(3);
+//	ImGui::PopFont();
+//
+//
+//	// Rendering
+//	ImGui::Render();
+//	int display_w, display_h;
+//	glfwGetFramebufferSize(window, &display_w, &display_h);
+//	//glViewport(0, 0, display_w, display_h);
+//	//glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+//	//glClear(GL_COLOR_BUFFER_BIT);
+//	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+//
+//	// Update and Render additional Platform Windows
+//	// (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+//	//  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+//	if (m_io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+//	{
+//		GLFWwindow* backup_current_context = glfwGetCurrentContext();
+//		ImGui::UpdatePlatformWindows();
+//		ImGui::RenderPlatformWindowsDefault();
+//		glfwMakeContextCurrent(backup_current_context);
+//	}
+//}
 
 void UI::loginUI()
 {
@@ -231,6 +232,18 @@ void UI::loginUI()
 	}
     
     ImGui::End();
+}
+
+void UI::setFont(std::string& fontName)
+{
+	try
+	{
+		m_currFont = m_fonts[fontName];
+	}
+	catch (...)
+	{
+		std::cout << "[ERROR]: No font with that name exists!" << std::endl;
+	}
 }
 
 void UI::terminateUI()

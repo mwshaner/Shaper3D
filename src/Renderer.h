@@ -22,7 +22,7 @@ public:
 	Renderer();
 	~Renderer();
 	void drawLights(Shader &shader, Camera &camera);
-	void drawMesh(Mesh &mesh, Shader &shader, Camera &camera, Material &material);
+	void drawMesh(Mesh& mesh, Shader& shader, Camera& camera, Material& material);
 };
 
 #endif

@@ -1,7 +1,7 @@
 #pragma once
-#include "UI.h"
 #include <iostream>
-//#include "Mesh.h"
+#include "Object.h"
+#include "UI.h"
 //#include "Controller.h"
 
 namespace 
@@ -30,7 +30,7 @@ namespace
 		static std::string password(128, '\0');
 		static std::string storedUsername;
 		static std::string storedPassword;
-		std::string pass = "12345";
+		std::string pass = "1";
 
 
 		ImGui::Begin("Login", nullptr, ImGuiWindowFlags_NoTitleBar);
@@ -92,7 +92,7 @@ namespace
 		return false;
 	}
 
-	void meshProperties()
+	void meshProperties(std::vector<Object>& meshes)
 	{
 		ImGui::Begin("Mesh Properties");
 
@@ -100,9 +100,16 @@ namespace
 		static int counter = 0;
 		float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
 		ImGui::PushButtonRepeat(true);
-		if (ImGui::ArrowButton("##left", ImGuiDir_Left) && counter >= 0) { counter--; }
+		if (ImGui::ArrowButton("##left", ImGuiDir_Left) && counter > 0) 
+		{ 
+			counter--; 
+		}
+
 		ImGui::SameLine(0.0f, spacing);
-		if (ImGui::ArrowButton("##right", ImGuiDir_Right) && counter < 10) { counter++; }
+		if (ImGui::ArrowButton("##right", ImGuiDir_Right) && counter < meshes.size()) 
+		{ 
+			counter++; 
+		}
 		ImGui::PopButtonRepeat();
 		ImGui::SameLine();
 		ImGui::Text("%d", counter);
@@ -141,6 +148,7 @@ class MeshView
 public:
 	MeshView(GLFWwindow* window, UI backend);
 	void render();
+	//bool meshProperties();
 	//void addObject(Mesh& obj);
 
 private:
@@ -148,5 +156,5 @@ private:
 	//Controller m_controller;
 	GLFWwindow* m_window;
 	ImGuiIO& m_io;
-//	std::vector<Mesh> m_meshObjects;
+	std::vector<Object> m_meshes;
 };

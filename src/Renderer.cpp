@@ -31,7 +31,7 @@ Renderer::~Renderer()
 {
 }
 
-void Renderer::drawMesh(Mesh &mesh, Shader& shader, Camera& camera, Material &material)
+void Renderer::drawMesh(Mesh& mesh, Shader& shader, Camera& camera, Material& material)
 {
 	// Use the main shader program
 	shader.bind();
