@@ -1,13 +1,28 @@
 #pragma once
 #include "UI.h"
 #include <iostream>
+//#include "Mesh.h"
 //#include "Controller.h"
 
 namespace 
 {
-
+	
 	typedef std::tuple<std::string, std::string, std::string> userRecord;
 	
+	bool ButtonCenteredOnLine(const char* label, float alignment = 0.5f)
+	{
+		ImGuiStyle& style = ImGui::GetStyle();
+
+		float size = ImGui::CalcTextSize(label).x + style.FramePadding.x * 2.0f;
+		float avail = ImGui::GetContentRegionAvail().x;
+
+		float off = (avail - size) * alignment;
+		if (off > 0.0f)
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+
+		return ImGui::Button(label);
+	}
+
 
 	bool login()
 	{
@@ -17,13 +32,42 @@ namespace
 		static std::string storedPassword;
 		std::string pass = "12345";
 
-		ImGui::Begin("Login");
 
-		ImGui::InputText("Username", &username[0], username.size());
+		ImGui::Begin("Login", nullptr, ImGuiWindowFlags_NoTitleBar);
+		
 
-		ImGui::InputText("Password", &password[0], password.size(), ImGuiInputTextFlags_Password);
+		ImGui::Dummy(ImVec2(0, 400));
 
-		if (ImGui::Button("Login"))
+
+		// Choose the widget width (adjust as needed)
+		float widgetWidth = 800.0f;
+		float posX = (ImGui::GetWindowContentRegionWidth() - widgetWidth) * 0.5f;
+
+
+		// Center and draw the label
+		ImGui::SetCursorPosX(posX);
+		ImGui::Text("Username");
+		ImGui::Dummy(ImVec2(0, 5));
+		ImGui::SetCursorPosX(posX);
+		ImGui::PushItemWidth(widgetWidth);
+		ImGui::InputText("##Username", &username[0], username.size());
+		ImGui::PopItemWidth();
+
+		ImGui::Dummy(ImVec2(0, 25));
+
+		ImGui::SetCursorPosX(posX);
+		ImGui::Text("Password");
+		ImGui::Dummy(ImVec2(0, 5));
+		ImGui::SetCursorPosX(posX);
+		ImGui::PushItemWidth(widgetWidth);
+		ImGui::InputText("##Password", &password[0], password.size(), ImGuiInputTextFlags_Password);
+		
+		
+		
+		ImGui::NewLine();
+		ImGui::NewLine();
+
+		if (ButtonCenteredOnLine("Login"))
 		{
 			storedUsername = username;
 			storedPassword = password;
@@ -38,7 +82,7 @@ namespace
 			}
 		}
 
-		if (ImGui::Button("Create Account"))
+		if (ButtonCenteredOnLine("Create Account"))
 		{
 			storedUsername = username;
 			storedPassword = password;
@@ -50,7 +94,21 @@ namespace
 
 	void meshProperties()
 	{
-		ImGui::ShowDemoWindow();
+		ImGui::Begin("Mesh Properties");
+
+		// Arrow buttons with Repeater
+		static int counter = 0;
+		float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
+		ImGui::PushButtonRepeat(true);
+		if (ImGui::ArrowButton("##left", ImGuiDir_Left) && counter >= 0) { counter--; }
+		ImGui::SameLine(0.0f, spacing);
+		if (ImGui::ArrowButton("##right", ImGuiDir_Right) && counter < 10) { counter++; }
+		ImGui::PopButtonRepeat();
+		ImGui::SameLine();
+		ImGui::Text("%d", counter);
+
+
+		ImGui::End();
 	}
 }
 
@@ -83,10 +141,12 @@ class MeshView
 public:
 	MeshView(GLFWwindow* window, UI backend);
 	void render();
+	//void addObject(Mesh& obj);
 
 private:
 	UI m_uiBackend;
 	//Controller m_controller;
 	GLFWwindow* m_window;
 	ImGuiIO& m_io;
+//	std::vector<Mesh> m_meshObjects;
 };

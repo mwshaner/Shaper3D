@@ -49,3 +49,8 @@ void MeshView::render()
     m_uiBackend.newUIFrame();
     m_uiBackend.renderUI(m_window, funcPtr);
 }
+
+//void MeshView::addObject(Mesh& obj)
+//{
+//    m_meshObjects.emplace_back(obj);
+//}
