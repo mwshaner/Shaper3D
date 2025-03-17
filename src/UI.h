@@ -20,4 +20,6 @@ public:
 private:
 	ImGuiIO& m_io;
 	const char* m_glslVersion;
+	ImFont* m_loginFont;
+	ImFont* m_uiFont;
 };

@@ -2,7 +2,9 @@
 
 UI::UI(GLFWwindow* window)
 	: m_io{ [&]() -> ImGuiIO& { ImGui::CreateContext(); return ImGui::GetIO(); } () }, // lambda initializes m_io to ImGuiIO&
-	  m_glslVersion{ "#version 100" }
+	  m_glslVersion{ "#version 100" },
+	  m_loginFont{ nullptr },
+	  m_uiFont{ nullptr }
 {
 	m_io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	m_io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -15,7 +17,14 @@ UI::UI(GLFWwindow* window)
 
 	 // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	ImGuiStyle& style = ImGui::GetStyle();
-	style.WindowRounding = 10.0f;
+	m_loginFont = m_io.Fonts->AddFontFromFileTTF("../../../fonts/static/Ruda-Bold.ttf", 50.0f);
+	m_uiFont = m_io.Fonts->AddFontFromFileTTF("../../../fonts/static/Ruda-Bold.ttf", 15.0f);
+
+	style.FrameRounding = 4.0f;
+	style.WindowBorderSize = 0.0f;
+	style.PopupBorderSize = 0.0f;
+	style.GrabRounding = 4.0f;
+
 	ImVec4* colors = ImGui::GetStyle().Colors;
 	colors[ImGuiCol_Text] = ImVec4(0.95f, 0.96f, 0.98f, 1.00f);
 	colors[ImGuiCol_TextDisabled] = ImVec4(0.36f, 0.42f, 0.47f, 1.00f);
@@ -114,9 +123,7 @@ bool UI::renderUI(GLFWwindow* window, bool (*funcPtr)())
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	
-	
 	ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
-	ImGui::PopStyleVar(3);
 
 	ImGuiID dockspace_id = ImGui::GetID("DockSpace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
@@ -124,6 +131,8 @@ bool UI::renderUI(GLFWwindow* window, bool (*funcPtr)())
 	//loginUI();
 	bool result = funcPtr();
 	ImGui::End();
+
+	ImGui::PopStyleVar(3);
 
 
 	// Rendering
@@ -167,10 +176,9 @@ void UI::renderUI(GLFWwindow* window, void (*funcPtr)())
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-
+	ImGui::PushFont(m_uiFont);
 
 	ImGui::Begin("DockSpace Window", nullptr, host_window_flags);
-	ImGui::PopStyleVar(3);
 
 	ImGuiID dockspace_id = ImGui::GetID("DockSpace");
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
@@ -178,6 +186,9 @@ void UI::renderUI(GLFWwindow* window, void (*funcPtr)())
 	//loginUI();
 	funcPtr();
 	ImGui::End();
+
+	ImGui::PopStyleVar(3);
+	ImGui::PopFont();
 
 
 	// Rendering
