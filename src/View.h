@@ -105,12 +105,18 @@ namespace
 		if (ImGui::ArrowButton("##left", ImGuiDir_Left) && counter >= 0) 
 		{ 
 			counter--; 
+			x = 0;
+			y = 0;
+			z = 0;
 		}
 
 		ImGui::SameLine(0.0f, spacing);
 		if (ImGui::ArrowButton("##right", ImGuiDir_Right) && counter < meshes.size()) 
 		{ 
 			counter++; 
+			x = 0;
+			y = 0;
+			z = 0;
 		}
 		ImGui::PopButtonRepeat();
 		ImGui::SameLine();

@@ -111,8 +111,8 @@ int main(int argc, char* argv[])
 	// Cube and cylinder mesh objects
 	Mesh lightCube;
 	Mesh soda;
-	//Mesh coaster;
-	//Mesh kiss;
+	Mesh coaster;
+	Mesh kiss;
 	//Mesh table;
 	//Mesh chapstick;
 	//Mesh rubikscube;
@@ -121,8 +121,8 @@ int main(int argc, char* argv[])
 
 	// Create the different meshes
 	soda.createCylinder(36, 3.0f, 1.0f);
-	//coaster.createCube(0.5f, 0.5f, 0.05f);
-	//kiss.createPyramid(0.5, 0.5, 0.5);
+	coaster.createCube(0.5f, 0.5f, 0.05f);
+	kiss.createPyramid(0.5, 0.5, 0.5);
 	//table.createPlane(30.0, 30.0);
 	//chapstick.createCylinder(36, 5.0f, 1.0f);
 	//rubikscube.createCube(0.5f, 0.5f, 0.5f);
@@ -132,10 +132,10 @@ int main(int argc, char* argv[])
 
 
 	// Send the textures to the mesh objects
-	//const char* tex1FileName = "../../../Textures/hersheyKiss.png";
-	//kiss.createTexture(1, tex1FileName);
-	//const char* tex2FileName = "../../../Textures/coastertop.png";
-	//coaster.createTexture(1, tex2FileName);
+	const char* tex1FileName = "../../../Textures/hersheyKiss.png";
+	kiss.createTexture(1, tex1FileName);
+	const char* tex2FileName = "../../../Textures/coastertop.png";
+	coaster.createTexture(1, tex2FileName);
 	//const char* tex3FileName = "../../../Textures/table.jpg";
 	//table.createTexture(1, tex3FileName);
 	const char* tex4FileName = "../../../Textures/coke.png";
@@ -163,9 +163,16 @@ int main(int argc, char* argv[])
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	Material sodaMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(0.7f, 0.6f, 0.6f), 0.25f);
+	Material coasterMat(glm::vec3(0.25f, 0.20725f, 0.20725f), glm::vec3(1.0f, 0.829f, 0.829f), glm::vec3(0.296648f, 0.296648f, 0.296648f), 1.5f);
+	Material kissMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
 
 	meshObject obj(soda, sodaMat);
+	meshObject obj2(coaster, coasterMat);
+	meshObject obj3(kiss, kissMat);
+
 	meshes.push_back(obj);
+	meshes.push_back(obj2);
+	meshes.push_back(obj3);
 
 	static UI guiBackend{ gWindow };
 	DB model;
@@ -229,8 +236,6 @@ int main(int argc, char* argv[])
 			{
 				renderer.drawMesh(object.m_mesh, shaderProgram, camera, object.m_mat);
 			}
-			
-			
 
 
 			//Material kissMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);

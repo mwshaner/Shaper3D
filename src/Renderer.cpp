@@ -51,8 +51,9 @@ void Renderer::drawMesh(Mesh& mesh, Shader& shader, Camera& camera, Material& ma
 	switch (mesh.shapeType)
 	{
 	case(CYLINDER):
-		mesh.texture.bind(0);
 		mesh.vao.bind();
+		mesh.texture.bind(0);
+		
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh.numVerticesSide);	  //sides
 		mesh.texture.bind(1);
 		glDrawArrays(GL_TRIANGLE_FAN, mesh.numVerticesSide, mesh.numVerticesTopAndBottom);	  //top
@@ -60,8 +61,9 @@ void Renderer::drawMesh(Mesh& mesh, Shader& shader, Camera& camera, Material& ma
 		break;
 
 	case(CUBE):
-		mesh.texture.bind(0);
 		mesh.vao.bind();
+		mesh.texture.bind(0);
+	
 		glDrawArrays(GL_TRIANGLES, 0, mesh.numVerts);
 		glBindVertexArray(0);
 		break;
