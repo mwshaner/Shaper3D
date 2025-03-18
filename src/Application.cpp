@@ -111,18 +111,19 @@ int main(int argc, char* argv[])
 	// Cube and cylinder mesh objects
 	Mesh lightCube;
 	Mesh soda;
-	Mesh coaster;
-	Mesh kiss;
+	//Mesh coaster;
+	//Mesh kiss;
 	//Mesh table;
 	//Mesh chapstick;
 	//Mesh rubikscube;
 	//Mesh wall1;
 	//Mesh wall2;
+	soda.meshName = "Cylinder";
 
 	// Create the different meshes
 	soda.createCylinder(36, 3.0f, 1.0f);
-	coaster.createCube(0.5f, 0.5f, 0.05f);
-	kiss.createPyramid(0.5, 0.5, 0.5);
+	//coaster.createCube(0.5f, 0.5f, 0.05f);
+	//kiss.createPyramid(0.5, 0.5, 0.5);
 	//table.createPlane(30.0, 30.0);
 	//chapstick.createCylinder(36, 5.0f, 1.0f);
 	//rubikscube.createCube(0.5f, 0.5f, 0.5f);
@@ -133,9 +134,9 @@ int main(int argc, char* argv[])
 
 	// Send the textures to the mesh objects
 	const char* tex1FileName = "../../../Textures/hersheyKiss.png";
-	kiss.createTexture(1, tex1FileName);
+	//kiss.createTexture(1, tex1FileName);
 	const char* tex2FileName = "../../../Textures/coastertop.png";
-	coaster.createTexture(1, tex2FileName);
+	//coaster.createTexture(1, tex2FileName);
 	//const char* tex3FileName = "../../../Textures/table.jpg";
 	//table.createTexture(1, tex3FileName);
 	const char* tex4FileName = "../../../Textures/coke.png";
@@ -167,12 +168,19 @@ int main(int argc, char* argv[])
 	Material kissMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
 
 	meshObject obj(soda, sodaMat);
-	meshObject obj2(coaster, coasterMat);
-	meshObject obj3(kiss, kissMat);
+	//meshObject obj2(coaster, coasterMat);
+	//meshObject obj3(kiss, kissMat);
 
-	meshes.push_back(obj);
-	meshes.push_back(obj2);
-	meshes.push_back(obj3);
+	//obj2.m_mesh.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 3.0f)));
+	//obj2.m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -1.9f, 0.0f)));
+
+	obj.m_mesh.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0f, 0.0f)));
+	obj.m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
+
+
+	meshes.emplace_back(obj);
+	//meshes.emplace_back(obj2);
+	//meshes.push_back(obj3);
 
 	static UI guiBackend{ gWindow };
 	DB model;
@@ -190,15 +198,15 @@ int main(int argc, char* argv[])
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;	
 
-			// Process user input
-			UProcessInput(gWindow);
+		// Process user input
+		UProcessInput(gWindow);
 
-			// Enable z-depth
-			glEnable(GL_DEPTH_TEST);
+		// Enable z-depth
+		glEnable(GL_DEPTH_TEST);
 
-			// Clear the frame and Z buffers.
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// Clear the frame and Z buffers.
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
 		if (loginView.getLoginStatus())
 		{
@@ -221,6 +229,8 @@ int main(int argc, char* argv[])
 			//wall2.rotateMesh(glm::rotate(glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
 			//wall2.translateMesh(glm::translate(glm::vec3(0.0f, 28.0f, -30.0f)));
 
+		
+
 			// Send the view and projection matrices to the shader
 			shaderProgram.setMat4("view", camera.GetViewMatrix());
 			shaderProgram.setMat4("projection", UGetProjectionMatrix());
@@ -230,12 +240,16 @@ int main(int argc, char* argv[])
 
 			// Draw all of the mesh objects
 			//Material coasterMat(glm::vec3(0.25f, 0.20725f, 0.20725f), glm::vec3(1.0f, 0.829f, 0.829f), glm::vec3(0.296648f, 0.296648f, 0.296648f), 1.5f);
+			//renderer.drawMesh(soda, shaderProgram, camera, sodaMat);
 			//renderer.drawMesh(coaster, shaderProgram, camera, coasterMat);
 
 			for (auto& object : meshes)
 			{
 				renderer.drawMesh(object.m_mesh, shaderProgram, camera, object.m_mat);
 			}
+
+			//renderer.drawMesh(obj.m_mesh, shaderProgram, camera, obj.m_mat);
+			//renderer.drawMesh(obj2.m_mesh, shaderProgram, camera, obj2.m_mat);
 
 
 			//Material kissMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);

@@ -23,6 +23,75 @@ namespace
 		return ImGui::Button(label);
 	}
 
+	static void drawVec3Control(const std::string& label, glm::vec3& values, float resetValue = 0.0f, float columnWidth = 100.0f)
+	{
+		ImGui::PushID(label.c_str());
+
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
+
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0,0 });
+
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+		if (ImGui::Button("X", buttonSize))
+		{
+			values.x = resetValue;
+		}
+		ImGui::SameLine();
+		ImGui::DragFloat("##X", &values.x, 0.07f);
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		ImGui::PopStyleColor(3);
+
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.3f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+		if (ImGui::Button("Y", buttonSize))
+		{
+			values.y = resetValue;
+		}
+		ImGui::SameLine();
+		ImGui::DragFloat("##Y", &values.y, 0.07f);
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		ImGui::PopStyleColor(3);
+
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.35f, 0.9f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+		if (ImGui::Button("Z", buttonSize))
+		{
+			values.z = resetValue;
+		}
+		ImGui::SameLine();
+		ImGui::DragFloat("##Z", &values.z, 0.07f);
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		ImGui::PopStyleColor(3);
+
+		ImGui::PopStyleVar();
+		ImGui::Columns(1);
+		ImGui::PopID();
+	}
+
+	bool createAccount()
+	{
+		//ImGui::Begin("Create Account");
+		ImGui::Text("Make an account!");
+
+		//ImGui::End();
+		return true;
+	}
 
 	bool login()
 	{
@@ -62,8 +131,6 @@ namespace
 		ImGui::PushItemWidth(widgetWidth);
 		ImGui::InputText("##Password", &password[0], password.size(), ImGuiInputTextFlags_Password);
 		
-		
-		
 		ImGui::NewLine();
 		ImGui::NewLine();
 
@@ -84,8 +151,7 @@ namespace
 
 		if (ButtonCenteredOnLine("Create Account"))
 		{
-			storedUsername = username;
-			storedPassword = password;
+			bool res = createAccount();
 		}
 
 		ImGui::End();
@@ -94,46 +160,41 @@ namespace
 
 	void meshProperties(std::vector<meshObject>& meshes)
 	{
-		static float x = 0, y = 0, z = 0;
+		static glm::vec3 translation(0.0f, 0.0f, 0.0f);
+		static glm::vec3 rotation(1.0f, 1.0f, 1.0f);
+		static glm::vec3 scale(1.0f, 1.0f, 1.0f);
 
-		ImGui::Begin("Mesh Properties");
+		static int selectedIndex = -1;
 
-		// Arrow buttons with Repeater
-		static int counter = 0;
-		float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
-		ImGui::PushButtonRepeat(true);
-		if (ImGui::ArrowButton("##left", ImGuiDir_Left) && counter >= 0) 
-		{ 
-			counter--; 
-			x = 0;
-			y = 0;
-			z = 0;
+		ImGui::Begin("Scene Hierarchy");
+
+		ImVec2 availSize = ImGui::GetContentRegionAvail();
+
+		float topHeight = availSize.y * 0.5f;
+
+		ImGui::BeginChild("TopChild", ImVec2(0, topHeight), true);
+		
+		for (size_t i = 0; i < meshes.size(); i++)
+		{
+			bool isSelected = (selectedIndex == i);
+			if (ImGui::Selectable(meshes.at(i).m_mesh.meshName.c_str(), isSelected))
+			{
+				selectedIndex = (selectedIndex == i) ? -1 : i;
+			}
 		}
+		ImGui::EndChild();
 
-		ImGui::SameLine(0.0f, spacing);
-		if (ImGui::ArrowButton("##right", ImGuiDir_Right) && counter < meshes.size()) 
-		{ 
-			counter++; 
-			x = 0;
-			y = 0;
-			z = 0;
-		}
-		ImGui::PopButtonRepeat();
-		ImGui::SameLine();
-		ImGui::Text("%d", counter);
+		ImGui::BeginChild("Object Properties", ImVec2(0, 0), true);
+		
+		drawVec3Control("Translation", translation, 0.0, 120);
+		drawVec3Control("Rotation", rotation, 0.0, 120);
+		drawVec3Control("Scale", scale, 1.0, 120);
 
-		ImGui::Dummy(ImVec2(0, 400));
+		meshes.at(0).m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), translation));
+		meshes.at(0).m_mesh.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), rotation));
+		meshes.at(0).m_mesh.scaleMesh(glm::scale(glm::mat4(1.0f), scale));
 
-		//soda.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
-
-
-		ImGui::InputFloat("Translate X", &x, -10000, 10000, "%.4f");
-		ImGui::InputFloat("Translate Y", &y, -10000, 10000, "%.4f");
-		ImGui::InputFloat("Translate Z", &z, -10000, 10000, "%.4f");
-
-		meshes.at(counter).m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z)));
-
-
+		ImGui::EndChild();
 
 		ImGui::End();
 	}

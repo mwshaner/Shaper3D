@@ -47,13 +47,14 @@ void Renderer::drawMesh(Mesh& mesh, Shader& shader, Camera& camera, Material& ma
 	shader.setVec3("material.specular", material.specular);
 	shader.setFloat("material.shininess", material.shininess);
 
+	mesh.vao.bind();
+
 	// different meshes use different drawing techniques
 	switch (mesh.shapeType)
 	{
 	case(CYLINDER):
-		mesh.vao.bind();
-		mesh.texture.bind(0);
 		
+		mesh.texture.bind(0);		
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh.numVerticesSide);	  //sides
 		mesh.texture.bind(1);
 		glDrawArrays(GL_TRIANGLE_FAN, mesh.numVerticesSide, mesh.numVerticesTopAndBottom);	  //top
@@ -61,25 +62,24 @@ void Renderer::drawMesh(Mesh& mesh, Shader& shader, Camera& camera, Material& ma
 		break;
 
 	case(CUBE):
-		mesh.vao.bind();
 		mesh.texture.bind(0);
-	
 		glDrawArrays(GL_TRIANGLES, 0, mesh.numVerts);
-		glBindVertexArray(0);
 		break;
 
 	case(PYRAMID):
 		mesh.texture.bind(0);
-		mesh.vao.bind();
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh.numVerts);
 		break;
 
 	case(PLANE):
 		mesh.texture.bind(0);
-		mesh.vao.bind();
 		glDrawArrays(GL_TRIANGLES, 0, mesh.numVerts);
 		break;
+
+	default:
+		break;
 	}
+	//std::cout << "VAO: " << mesh.vao.ID << std::endl;
 }
 
 

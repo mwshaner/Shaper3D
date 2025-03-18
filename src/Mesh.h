@@ -66,6 +66,7 @@ public:
 	float numVerticesSide;
 	float numVerticesTopAndBottom;
 	float numVerticesTotal;
+	std::string meshName;
 };
 
 
