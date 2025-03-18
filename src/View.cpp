@@ -54,7 +54,8 @@ void MeshView::render()
     m_uiBackend.setFont(std::string("RudaBold25"));
     m_uiBackend.newUIFrame();
     m_uiBackend.prepareDockspace();
-    meshProperties(m_meshes);
+    sceneHierarchy(m_meshes);
+    MaterialEditor(m_meshes);
     m_uiBackend.renderUI();
 }
 

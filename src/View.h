@@ -86,11 +86,52 @@ namespace
 
 	bool createAccount()
 	{
-		//ImGui::Begin("Create Account");
-		ImGui::Text("Make an account!");
+		static std::string CAusername(128, '\0');
+		static std::string CApassword(128, '\0');
+		static std::string CAstoredUsername;
+		static std::string CAstoredPassword;
 
-		//ImGui::End();
-		return true;
+		ImGui::Begin("Create Account");
+
+
+		ImGui::Dummy(ImVec2(0, 400));
+
+
+		// Choose the widget width (adjust as needed)
+		float widgetWidth = 800.0f;
+		float posX = (ImGui::GetWindowContentRegionWidth() - widgetWidth) * 0.5f;
+
+
+		// Center and draw the label
+		ImGui::SetCursorPosX(posX);
+		ImGui::Text("Please Enter a Username");
+		ImGui::Dummy(ImVec2(0, 5));
+		ImGui::SetCursorPosX(posX);
+		ImGui::PushItemWidth(widgetWidth);
+		ImGui::InputText("##Username", &CAusername[0], CAusername.size());
+		ImGui::PopItemWidth();
+
+		ImGui::Dummy(ImVec2(0, 25));
+
+		ImGui::SetCursorPosX(posX);
+		ImGui::Text("Please Enter a Password");
+		ImGui::Dummy(ImVec2(0, 5));
+		ImGui::SetCursorPosX(posX);
+		ImGui::PushItemWidth(widgetWidth);
+		ImGui::InputText("##Password", &CApassword[0], CApassword.size(), ImGuiInputTextFlags_Password);
+
+		ImGui::NewLine();
+		ImGui::NewLine();
+
+		ImGui::SetCursorPosX(posX);
+		ImGui::Text("Press Submit to Create Your Account");
+		if (ButtonCenteredOnLine("Submit"))
+		{	
+			ImGui::End();
+			return true;	
+		}
+		ImGui::End();
+		return false;
 	}
 
 	bool login()
@@ -99,10 +140,13 @@ namespace
 		static std::string password(128, '\0');
 		static std::string storedUsername;
 		static std::string storedPassword;
-		std::string pass = "1";
+		static std::string pass = "1";
+		static bool createAccountWindow = false;
+		bool result = false;
+		static bool showErr = false;
 
 
-		ImGui::Begin("Login", nullptr, ImGuiWindowFlags_NoTitleBar);
+		ImGui::Begin("##Login", nullptr, ImGuiWindowFlags_NoTitleBar);
 		
 
 		ImGui::Dummy(ImVec2(0, 400));
@@ -140,25 +184,46 @@ namespace
 			storedPassword = password;
 
 			storedPassword = storedPassword.c_str();
-
-			if (storedPassword == pass)
+			//showErr = storedPassword == pass ? true : false;
+			if (storedPassword != pass)
 			{
-				//std::cout << "SUCESS\n";
-				ImGui::End();
-				return true;
+				showErr = true;
 			}
 		}
 
 		if (ButtonCenteredOnLine("Create Account"))
 		{
-			bool res = createAccount();
+			createAccountWindow = true;
+		}
+
+		if (createAccountWindow)
+		{
+			result = createAccount();
+
+			// Temporary to simulate behavior of sucessful account creation in the DB
+			createAccountWindow = !result;
+		}
+
+		if (showErr)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+			ImGui::SetCursorPosX(posX - 250);
+			ImGui::Text("Sorry, We Have No Account Associated With That Username/Password");
+			ImGui::PopStyleColor();
+		}
+
+		// Temporary until DB queries are fully incoroprated
+		if (storedPassword == pass)
+		{
+			ImGui::End();
+			return true;
 		}
 
 		ImGui::End();
 		return false;
 	}
 
-	void meshProperties(std::vector<meshObject>& meshes)
+	void sceneHierarchy(std::vector<meshObject>& meshes)
 	{
 		static glm::vec3 translation(0.0f, 0.0f, 0.0f);
 		static glm::vec3 rotation(1.0f, 1.0f, 1.0f);
@@ -167,6 +232,7 @@ namespace
 		static int selectedIndex = -1;
 
 		ImGui::Begin("Scene Hierarchy");
+		ImGui::SeparatorText("Objects");
 
 		ImVec2 availSize = ImGui::GetContentRegionAvail();
 
@@ -185,17 +251,54 @@ namespace
 		ImGui::EndChild();
 
 		ImGui::BeginChild("Object Properties", ImVec2(0, 0), true);
-		
-		drawVec3Control("Translation", translation, 0.0, 120);
-		drawVec3Control("Rotation", rotation, 0.0, 120);
-		drawVec3Control("Scale", scale, 1.0, 120);
+		ImGui::SeparatorText("Mesh Properties");
+		if (selectedIndex >= 0)
+		{
+			
 
-		meshes.at(0).m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), translation));
-		meshes.at(0).m_mesh.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), rotation));
-		meshes.at(0).m_mesh.scaleMesh(glm::scale(glm::mat4(1.0f), scale));
+			// Mesh Controls
+			drawVec3Control("Translation", translation, 0.0, 120);
+			drawVec3Control("Rotation", rotation, 1.0, 120);
+			drawVec3Control("Scale", scale, 1.0, 120);
+
+			// Manipulates the mesh based on the controllers
+			meshes.at(selectedIndex).m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), translation));
+			meshes.at(selectedIndex).m_mesh.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), rotation));
+			meshes.at(selectedIndex).m_mesh.scaleMesh(glm::scale(glm::mat4(1.0f), scale));
+		}
 
 		ImGui::EndChild();
+		ImGui::End();
+	}
 
+	void MaterialEditor(std::vector<meshObject>& meshes)
+	{
+		//Material sodaMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(0.7f, 0.6f, 0.6f), 0.25f);
+		static glm::vec3 ambient(meshes.at(0).m_mat.ambient);
+		static glm::vec3 specular(meshes.at(0).m_mat.specular);
+		static glm::vec3 diffuse(meshes.at(0).m_mat.diffuse);
+		static glm::vec3 shininess(meshes.at(0).m_mat.shininess);
+
+		ImGui::Begin("Material Editor");
+		ImGui::NewLine();
+		ImGui::SeparatorText("Material Properties");
+
+
+		// Mesh Controls
+		drawVec3Control("Ambient", ambient, 0.0, 120);
+		drawVec3Control("Specular", specular, 0.0, 120);
+		drawVec3Control("Diffuse", diffuse, 0.0, 120);
+		drawVec3Control("Shininess", shininess, 0.0, 120);
+
+		ImGui::NewLine();
+		ImGui::SeparatorText("Textures");
+
+		/*for (int i = 0; i < 2; i++)
+		{
+			ImGui::NewLine();
+			ImGui::Image((ImTextureID)(intptr_t)meshes.at(i).m_mesh.texture.getTextures()[i], ImVec2(250, 250));
+		}*/
+		ImGui::Image((ImTextureID)(intptr_t)meshes.at(0).m_mesh.texture.getTextures()[0], ImVec2(512, 512));
 		ImGui::End();
 	}
 }

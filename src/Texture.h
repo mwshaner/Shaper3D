@@ -17,6 +17,7 @@ public:
 	~Texture();
 	void loadTexture(int count, const char* tex1Name, const char* tex2Name = "0", const char* tex3Name = "0", const char* tex4Name = "0", const char* tex5Name = "0");
 	void bind(GLuint pos);
+	GLuint* getTextures() { return textures; }
 	void destroyTexture();
 private:
 	GLuint textures[5];
