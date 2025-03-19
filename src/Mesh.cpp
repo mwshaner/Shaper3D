@@ -16,25 +16,31 @@
 Mesh::Mesh()
 {
 	glm::mat4 identityMatrix = glm::mat4(1.0f);  // Create an identity matrix.
-	scale = glm::scale(identityMatrix, glm::vec3(1.0f, 1.0f, 1.0f));
-	rotation = glm::rotate(identityMatrix, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	translation = glm::translate(identityMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+	//m_scale = glm::scale(identityMatrix, glm::vec3(1.0f, 1.0f, 1.0f));
+	//m_rotation = glm::rotate(identityMatrix, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	//m_translation = glm::translate(identityMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
+	
+	m_scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	m_rotation = glm::vec3(1.0f, 1.0f, 1.0f);
+	m_translation = glm::vec3(0.0f, 0.0f, 0.0f);
+
+
 	//scale = glm::scale(glm::vec3(1.0f, 1.0f, 1.0f));
 	//rotation = glm::rotate(glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	//translation = glm::translate(glm::vec3(0.0f, 0.0f, 0.0f));
-	UVScale = glm::vec2(1.0f, 1.0f);
+	m_UVScale = glm::vec2(1.0f, 1.0f);
 }
 
 Mesh::~Mesh()
 {
-	vao.Delete();
+	m_vao.Delete();
 }
 
 
 // Creates a plane of a particular width and height
 void Mesh::createPlane(float width, float length)
 {
-	shapeType = PLANE;
+	m_shapeType = PLANE;
 
 	std::vector<GLfloat> vertices =
 	{
@@ -53,13 +59,13 @@ void Mesh::createPlane(float width, float length)
 	const GLuint floatsPerNormal = 3;
 	const GLuint floatsPerUV = 2;
 	GLint stride = sizeof(float) * (floatsPerVertex + floatsPerNormal + floatsPerUV);
-	numVerts = vertices.size() / (floatsPerVertex + floatsPerNormal + floatsPerUV);
+	m_numVerts = vertices.size() / (floatsPerVertex + floatsPerNormal + floatsPerUV);
 
 	// create the VAO and VBO
-	vao.bind();
-	vbo.createVBO(vertices, vertices.size() * sizeof(float));
-	vao.linkVBO(vbo, 3, 3, 2, stride);
-	vao.unbind();
+	m_vao.bind();
+	m_vbo.createVBO(vertices, vertices.size() * sizeof(float));
+	m_vao.linkVBO(m_vbo, 3, 3, 2, stride);
+	m_vao.unbind();
 }
 
 /*
@@ -67,14 +73,14 @@ void Mesh::createPlane(float width, float length)
 */
 void Mesh::createCylinder(float numSides, float height, float radius)
 {
-	shapeType = CYLINDER;
+	m_shapeType = CYLINDER;
 
 	// useful counts for drawing
-	numSlices = numSides;
-	numVerticesSide = (numSlices + 1) * 2;
-	numVerticesTopAndBottom = numSlices + 2;
-	numVerticesTotal = numVerticesSide + numVerticesTopAndBottom * 2;
-	float angleStep = 2.0f * glm::pi<float>() / numSlices;
+	m_numSlices = numSides;
+	m_numVerticesSide = (m_numSlices + 1) * 2;
+	m_numVerticesTopAndBottom = m_numSlices + 2;
+	m_numVerticesTotal = m_numVerticesSide + m_numVerticesTopAndBottom * 2;
+	float angleStep = 2.0f * glm::pi<float>() / m_numSlices;
 
 	// unit circle vertices
 	std::vector<GLfloat> circleXcoords;
@@ -87,7 +93,7 @@ void Mesh::createCylinder(float numSides, float height, float radius)
 
 	// Calculate 2d circle vertex positions in x and z axis
 	float currAngle = 0.0f;
-	for (int i = 0; i <= numSlices; i++)
+	for (int i = 0; i <= m_numSlices; i++)
 	{
 		circleXcoords.push_back(cos(currAngle)); // X
 		circleZcoords.push_back(sin(currAngle)); // Z
@@ -96,7 +102,7 @@ void Mesh::createCylinder(float numSides, float height, float radius)
 	}
 
 	// Create cylinder tube vertices
-	for (int i = 0; i <= numSlices; i++)
+	for (int i = 0; i <= m_numSlices; i++)
 	{
 		float x = circleXcoords.at(i);
 		float y = height / 2.0f;
@@ -113,7 +119,7 @@ void Mesh::createCylinder(float numSides, float height, float radius)
 		tube.push_back(z);
 
 		// Texture coords
-		tube.push_back((float)i / numSlices);
+		tube.push_back((float)i / m_numSlices);
 		tube.push_back(0.0f);
 
 		// bottom point
@@ -127,7 +133,7 @@ void Mesh::createCylinder(float numSides, float height, float radius)
 		tube.push_back(z);
 
 		// Texture coords
-		tube.push_back((float)i / numSlices);
+		tube.push_back((float)i / m_numSlices);
 		tube.push_back(1.0f);
 	}
 
@@ -146,7 +152,7 @@ void Mesh::createCylinder(float numSides, float height, float radius)
 	top.push_back(0.5f);
 
 	// Create top cylinder cap
-	for (int i = 0; i <= numSlices; i++)
+	for (int i = 0; i <= m_numSlices; i++)
 	{
 		float x = circleXcoords.at(i);
 		float y = height / 2.0f;
@@ -182,7 +188,7 @@ void Mesh::createCylinder(float numSides, float height, float radius)
 	bottom.push_back(0.5f);
 
 	// Create bottom cylinder cap
-	for (int i = 0; i <= numSlices; i++)
+	for (int i = 0; i <= m_numSlices; i++)
 	{
 		float x = circleXcoords.at(i);
 		float y = -height / 2.0f;
@@ -212,16 +218,16 @@ void Mesh::createCylinder(float numSides, float height, float radius)
 	const GLuint floatsPerUV = 2;
 
 	// store vertex and index count
-	numVerts = sizeof(tube) / (sizeof(tube[0]) * (floatsPerVertex + floatsPerNormal + floatsPerUV));
+	m_numVerts = sizeof(tube) / (sizeof(tube[0]) * (floatsPerVertex + floatsPerNormal + floatsPerUV));
 
 	// Strides between vertex coordinates
 	GLuint stride = sizeof(float) * (floatsPerVertex + floatsPerNormal + floatsPerUV);
 
 	// create the VAO and VBO
-	vao.bind();	
-	vbo.createVBO(tube, tube.size() * sizeof(float));
-	vao.linkVBO(vbo, 3, 3, 2, stride);
-	vao.unbind();
+	m_vao.bind();	
+	m_vbo.createVBO(tube, tube.size() * sizeof(float));
+	m_vao.linkVBO(m_vbo, 3, 3, 2, stride);
+	m_vao.unbind();
 }
 
 /*
@@ -229,7 +235,7 @@ void Mesh::createCylinder(float numSides, float height, float radius)
 */
 void Mesh::createCube(float length, float width, float height)
 {
-	shapeType = CUBE;
+	m_shapeType = CUBE;
 
 	// Create basic box verts
 	std::vector<GLfloat> vertices =
@@ -281,15 +287,15 @@ void Mesh::createCube(float length, float width, float height)
 	const GLuint floatsPerNormal = 3;
 	const GLuint floatsPerUV = 2;
 
-	numVerts = vertices.size() / (floatsPerVertex + floatsPerNormal + floatsPerUV);
+	m_numVerts = vertices.size() / (floatsPerVertex + floatsPerNormal + floatsPerUV);
 
 	GLint stride = sizeof(float) * (floatsPerVertex + floatsPerNormal + floatsPerUV);// The number of floats before each
 
 	// create the VAO and VBO
-	vao.bind();
-	vbo.createVBO(vertices, vertices.size() * sizeof(float));
-	vao.linkVBO(vbo, 3, 3, 2, stride);
-	vao.unbind();
+	m_vao.bind();
+	m_vbo.createVBO(vertices, vertices.size() * sizeof(float));
+	m_vao.linkVBO(m_vbo, 3, 3, 2, stride);
+	m_vao.unbind();
 }
 
 /*
@@ -297,7 +303,7 @@ void Mesh::createCube(float length, float width, float height)
 */
 void Mesh::createPyramid(float width, float length, float height)
 {
-	shapeType = PYRAMID;
+	m_shapeType = PYRAMID;
 
 	std::vector<GLfloat> vertices
 	{
@@ -340,12 +346,12 @@ void Mesh::createPyramid(float width, float length, float height)
 	// Strides between sets of attribute data
 	GLint stride = sizeof(float) * (floatsPerVertex + floatsPerNormal + floatsPerUV);
 
-	numVerts = vertices.size() / (floatsPerVertex + floatsPerNormal + floatsPerUV);
+	m_numVerts = vertices.size() / (floatsPerVertex + floatsPerNormal + floatsPerUV);
 
-	vao.bind();
-	vbo.createVBO(vertices, vertices.size() * sizeof(float));
-	vao.linkVBO(vbo, 3, 3, 2, stride);
-	vao.unbind();
+	m_vao.bind();
+	m_vbo.createVBO(vertices, vertices.size() * sizeof(float));
+	m_vao.linkVBO(m_vbo, 3, 3, 2, stride);
+	m_vao.unbind();
 }
 
 
@@ -354,36 +360,36 @@ void Mesh::createPyramid(float width, float length, float height)
 */
 void Mesh::createTexture(int count, const char* tex1Name, const char* tex2Name, const char* tex3Name, const char* tex4Name, const char* tex5Name)
 {
-	texture.loadTexture(count, tex1Name, tex2Name, tex3Name, tex4Name, tex5Name);
+	m_texture.loadTexture(count, tex1Name, tex2Name, tex3Name, tex4Name, tex5Name);
 }
 
 /*
 	scaleMesh() is a mutator for the scale matrix
 */
-void Mesh::scaleMesh(glm::mat4 t_scale)
+void Mesh::scaleMesh(glm::vec3 scale)
 {
-	scale = t_scale;
+	m_scale = scale;
 }
 
 /*
 	rotateMesh() is a mutator for the rotation matrix
 */
-void Mesh::rotateMesh(glm::mat4 t_rotation)
+void Mesh::rotateMesh(glm::vec3 rotation)
 {
-	rotation = t_rotation;
+	m_rotation = rotation;
 }
 
 /*
 	translateMesh() is a mutator for the translation matrix
 */
-void Mesh::translateMesh(glm::mat4 t_translate)
+void Mesh::translateMesh(glm::vec3 translation)
 {
-	translation = t_translate;
+	m_translation = translation;
 }
 
 void Mesh::scaleTexture(glm::vec2 scale)
 {
-	UVScale = scale;
+	m_UVScale = scale;
 }
 
 /*
@@ -391,7 +397,7 @@ void Mesh::scaleTexture(glm::vec2 scale)
 */
 glm::mat4 Mesh::getModelMatrix()
 {
-	glm::mat4 model = translation * rotation * scale;
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), m_translation) * glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), m_rotation) * glm::scale(glm::mat4(1.0f), m_scale);
 	return model;
 }
 
@@ -401,7 +407,7 @@ glm::mat4 Mesh::getModelMatrix()
 */
 void Mesh::destroyMesh()
 {
-	vao.Delete();
+	m_vao.Delete();
 }
 
 /*
@@ -409,5 +415,5 @@ void Mesh::destroyMesh()
 */
 void Mesh::destroyTexture()
 {
-	texture.destroyTexture();
+	m_texture.destroyTexture();
 }

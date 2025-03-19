@@ -43,30 +43,34 @@ public:
 	void createPyramid(float width, float length, float height);
 	void createPlane(float width, float length);
 	void createTexture(int count, const char* tex1Name, const char* tex2Name = "0", const char* tex3Name = "0", const char* tex4Name = "0", const char* tex5Name = "0");
-	void scaleMesh(glm::mat4 t_scale);
-	void rotateMesh(glm::mat4 t_rotation);
-	void translateMesh(glm::mat4 t_translate);
+	void scaleMesh(glm::vec3 scale);
+	void rotateMesh(glm::vec3 rotation);
+	void translateMesh(glm::vec3 translation);
 	void scaleTexture(glm::vec2 scale);
+	glm::vec3 getScale() { return m_scale; }
+	glm::vec3 getRotation() { return m_rotation; }
+	glm::vec3 getTranslation() { return m_translation; }
 	glm::mat4 getModelMatrix();
-	glm::vec2 getUVscale() { return UVScale; }
+	glm::vec2 getUVscale() { return m_UVScale; }
 	void destroyMesh();
 	void destroyTexture();
 
-	VAO vao;
-	VBO vbo;
-	Texture texture;
-	SHAPES shapeType;
-	glm::mat4 scale;
-	glm::mat4 rotation;
-	glm::mat4 translation;
-	glm::vec2 UVScale;
-	std::vector<GLfloat> verts;
-	GLuint numVerts;
-	float numSlices;
-	float numVerticesSide;
-	float numVerticesTopAndBottom;
-	float numVerticesTotal;
-	std::string meshName;
+	VAO m_vao;
+	VBO m_vbo;
+	Texture m_texture;
+	SHAPES m_shapeType;
+	glm::vec3 m_scale;
+	glm::vec3 m_rotation;
+	glm::vec3 m_translation;
+	glm::vec2 m_UVScale;
+	std::vector<GLfloat> m_verts;
+	GLuint m_numVerts;
+	float m_numSlices;
+	float m_numVerticesSide;
+	float m_numVerticesTopAndBottom;
+	float m_numVerticesTotal;
+	std::string m_meshName;
+
 };
 
 

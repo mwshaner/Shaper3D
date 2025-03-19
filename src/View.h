@@ -225,9 +225,9 @@ namespace
 
 	void sceneHierarchy(std::vector<meshObject>& meshes)
 	{
-		static glm::vec3 translation(0.0f, 0.0f, 0.0f);
-		static glm::vec3 rotation(1.0f, 1.0f, 1.0f);
-		static glm::vec3 scale(1.0f, 1.0f, 1.0f);
+		static glm::vec3 translation = meshes.at(0).m_mesh.getTranslation();
+		static glm::vec3 rotation = meshes.at(0).m_mesh.getRotation();
+		static glm::vec3 scale = meshes.at(0).m_mesh.getScale();
 
 		static int selectedIndex = -1;
 
@@ -243,7 +243,7 @@ namespace
 		for (size_t i = 0; i < meshes.size(); i++)
 		{
 			bool isSelected = (selectedIndex == i);
-			if (ImGui::Selectable(meshes.at(i).m_mesh.meshName.c_str(), isSelected))
+			if (ImGui::Selectable(meshes.at(i).m_mesh.m_meshName.c_str(), isSelected))
 			{
 				selectedIndex = (selectedIndex == i) ? -1 : i;
 			}
@@ -254,17 +254,15 @@ namespace
 		ImGui::SeparatorText("Mesh Properties");
 		if (selectedIndex >= 0)
 		{
-			
-
 			// Mesh Controls
 			drawVec3Control("Translation", translation, 0.0, 120);
 			drawVec3Control("Rotation", rotation, 1.0, 120);
 			drawVec3Control("Scale", scale, 1.0, 120);
 
 			// Manipulates the mesh based on the controllers
-			meshes.at(selectedIndex).m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), translation));
-			meshes.at(selectedIndex).m_mesh.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), rotation));
-			meshes.at(selectedIndex).m_mesh.scaleMesh(glm::scale(glm::mat4(1.0f), scale));
+			meshes.at(selectedIndex).m_mesh.translateMesh(translation);
+			meshes.at(selectedIndex).m_mesh.rotateMesh(rotation);
+			meshes.at(selectedIndex).m_mesh.scaleMesh(scale);
 		}
 
 		ImGui::EndChild();
@@ -298,7 +296,7 @@ namespace
 			ImGui::NewLine();
 			ImGui::Image((ImTextureID)(intptr_t)meshes.at(i).m_mesh.texture.getTextures()[i], ImVec2(250, 250));
 		}*/
-		ImGui::Image((ImTextureID)(intptr_t)meshes.at(0).m_mesh.texture.getTextures()[0], ImVec2(512, 512));
+		ImGui::Image((ImTextureID)(intptr_t)meshes.at(0).m_mesh.m_texture.getTextures()[0], ImVec2(512, 512));
 		ImGui::End();
 	}
 }

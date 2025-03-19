@@ -47,33 +47,33 @@ void Renderer::drawMesh(Mesh& mesh, Shader& shader, Camera& camera, Material& ma
 	shader.setVec3("material.specular", material.specular);
 	shader.setFloat("material.shininess", material.shininess);
 
-	mesh.vao.bind();
+	mesh.m_vao.bind();
 
 	// different meshes use different drawing techniques
-	switch (mesh.shapeType)
+	switch (mesh.m_shapeType)
 	{
 	case(CYLINDER):
 		
-		mesh.texture.bind(0);		
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh.numVerticesSide);	  //sides
-		mesh.texture.bind(1);
-		glDrawArrays(GL_TRIANGLE_FAN, mesh.numVerticesSide, mesh.numVerticesTopAndBottom);	  //top
-		glDrawArrays(GL_TRIANGLE_FAN, mesh.numVerticesSide + mesh.numVerticesTopAndBottom, mesh.numVerticesTopAndBottom);	  //bottom
+		mesh.m_texture.bind(0);		
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh.m_numVerticesSide);	  //sides
+		mesh.m_texture.bind(1);
+		glDrawArrays(GL_TRIANGLE_FAN, mesh.m_numVerticesSide, mesh.m_numVerticesTopAndBottom);	  //top
+		glDrawArrays(GL_TRIANGLE_FAN, mesh.m_numVerticesSide + mesh.m_numVerticesTopAndBottom, mesh.m_numVerticesTopAndBottom);	  //bottom
 		break;
 
 	case(CUBE):
-		mesh.texture.bind(0);
-		glDrawArrays(GL_TRIANGLES, 0, mesh.numVerts);
+		mesh.m_texture.bind(0);
+		glDrawArrays(GL_TRIANGLES, 0, mesh.m_numVerts);
 		break;
 
 	case(PYRAMID):
-		mesh.texture.bind(0);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh.numVerts);
+		mesh.m_texture.bind(0);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh.m_numVerts);
 		break;
 
 	case(PLANE):
-		mesh.texture.bind(0);
-		glDrawArrays(GL_TRIANGLES, 0, mesh.numVerts);
+		mesh.m_texture.bind(0);
+		glDrawArrays(GL_TRIANGLES, 0, mesh.m_numVerts);
 		break;
 
 	default:

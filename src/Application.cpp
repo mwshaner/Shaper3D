@@ -118,7 +118,7 @@ int main(int argc, char* argv[])
 	//Mesh rubikscube;
 	//Mesh wall1;
 	//Mesh wall2;
-	soda.meshName = "Cylinder";
+	soda.m_meshName = "Cylinder";
 
 	// Create the different meshes
 	soda.createCylinder(36, 3.0f, 1.0f);
@@ -174,8 +174,11 @@ int main(int argc, char* argv[])
 	//obj2.m_mesh.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 3.0f)));
 	//obj2.m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -1.9f, 0.0f)));
 
-	obj.m_mesh.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0f, 0.0f)));
-	obj.m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
+	//obj.m_mesh.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0f, 0.0f)));
+	//obj.m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
+
+	obj.m_mesh.rotateMesh(glm::vec3(0.0, 1.0f, 0.0f));
+	obj.m_mesh.translateMesh(glm::vec3(2.0f, -0.2f, 0.0f));
 
 
 	meshes.emplace_back(obj);
