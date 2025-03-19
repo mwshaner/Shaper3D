@@ -173,20 +173,20 @@ int main(int argc, char* argv[])
 	//meshObject obj3(kiss, kissMat);
 
 	obj2.m_mesh.scaleMesh(glm::vec3(3.0f, 3.0f, 3.0f));
-	obj2.m_mesh.translateMesh(glm::vec3(2.0f, -1.9f, 0.0f));
+	obj2.m_mesh.translateMesh(glm::vec3(0.0f, -0.1f, 0.0f));
 	obj2.m_mesh.rotateMesh(glm::vec3(0.0, 1.0f, 0.0f));
 
 	//obj.m_mesh.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0f, 0.0f)));
 	//obj.m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
 
 	obj.m_mesh.rotateMesh(glm::vec3(0.0, 1.0f, 0.0f));
-	obj.m_mesh.translateMesh(glm::vec3(2.0f, -0.2f, 0.0f));
+	obj.m_mesh.translateMesh(glm::vec3(0.0f, 1.5f, 0.0f));
 
-	std::shared_ptr<meshObject> can = make_shared<meshObject>(obj);
-	std::shared_ptr<meshObject> c = make_shared<meshObject>(obj2);
+	std::shared_ptr<meshObject> sodaPtr = make_shared<meshObject>(obj);
+	std::shared_ptr<meshObject> coasterPtr = make_shared<meshObject>(obj2);
 
-	meshes.emplace_back(can);
-	meshes.emplace_back(c);
+	meshes.emplace_back(sodaPtr);
+	meshes.emplace_back(coasterPtr);
 	//meshes.emplace_back(obj2);
 	//meshes.push_back(obj3);
 

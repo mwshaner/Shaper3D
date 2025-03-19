@@ -238,8 +238,6 @@ void MeshView::sceneHierarchyWindow()
 		m_meshes.at(m_selectedIndex)->m_mesh.rotateMesh(rotation);
 		m_meshes.at(m_selectedIndex)->m_mesh.scaleMesh(scale);
 	}
-	ImGui::Text("%d", m_selectedIndex);
-
 
 	ImGui::EndChild();
 	ImGui::End();
