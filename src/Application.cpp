@@ -76,7 +76,7 @@ namespace
 	const char* cubeFragmentShaderSource = "../../../resources/cubeFrag.fs";
 
 	bool keyState = false;
-	std::vector<meshObject> meshes;
+	std::vector<std::shared_ptr<meshObject>> meshes;
 }
 
 
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 	// Cube and cylinder mesh objects
 	Mesh lightCube;
 	Mesh soda;
-	//Mesh coaster;
+	Mesh coaster;
 	//Mesh kiss;
 	//Mesh table;
 	//Mesh chapstick;
@@ -119,10 +119,11 @@ int main(int argc, char* argv[])
 	//Mesh wall1;
 	//Mesh wall2;
 	soda.m_meshName = "Cylinder";
+	coaster.m_meshName = "Coaster";
 
 	// Create the different meshes
 	soda.createCylinder(36, 3.0f, 1.0f);
-	//coaster.createCube(0.5f, 0.5f, 0.05f);
+	coaster.createCube(0.5f, 0.5f, 0.05f);
 	//kiss.createPyramid(0.5, 0.5, 0.5);
 	//table.createPlane(30.0, 30.0);
 	//chapstick.createCylinder(36, 5.0f, 1.0f);
@@ -136,7 +137,7 @@ int main(int argc, char* argv[])
 	const char* tex1FileName = "../../../Textures/hersheyKiss.png";
 	//kiss.createTexture(1, tex1FileName);
 	const char* tex2FileName = "../../../Textures/coastertop.png";
-	//coaster.createTexture(1, tex2FileName);
+	coaster.createTexture(1, tex2FileName);
 	//const char* tex3FileName = "../../../Textures/table.jpg";
 	//table.createTexture(1, tex3FileName);
 	const char* tex4FileName = "../../../Textures/coke.png";
@@ -168,11 +169,12 @@ int main(int argc, char* argv[])
 	Material kissMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
 
 	meshObject obj(soda, sodaMat);
-	//meshObject obj2(coaster, coasterMat);
+	meshObject obj2(coaster, coasterMat);
 	//meshObject obj3(kiss, kissMat);
 
-	//obj2.m_mesh.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 3.0f)));
-	//obj2.m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -1.9f, 0.0f)));
+	obj2.m_mesh.scaleMesh(glm::vec3(3.0f, 3.0f, 3.0f));
+	obj2.m_mesh.translateMesh(glm::vec3(2.0f, -1.9f, 0.0f));
+	obj2.m_mesh.rotateMesh(glm::vec3(0.0, 1.0f, 0.0f));
 
 	//obj.m_mesh.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0f, 0.0f)));
 	//obj.m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
@@ -180,8 +182,11 @@ int main(int argc, char* argv[])
 	obj.m_mesh.rotateMesh(glm::vec3(0.0, 1.0f, 0.0f));
 	obj.m_mesh.translateMesh(glm::vec3(2.0f, -0.2f, 0.0f));
 
+	std::shared_ptr<meshObject> can = make_shared<meshObject>(obj);
+	std::shared_ptr<meshObject> c = make_shared<meshObject>(obj2);
 
-	meshes.emplace_back(obj);
+	meshes.emplace_back(can);
+	meshes.emplace_back(c);
 	//meshes.emplace_back(obj2);
 	//meshes.push_back(obj3);
 
@@ -248,7 +253,7 @@ int main(int argc, char* argv[])
 
 			for (auto& object : meshes)
 			{
-				renderer.drawMesh(object.m_mesh, shaderProgram, camera, object.m_mat);
+				renderer.drawMesh(object->m_mesh, shaderProgram, camera, object->m_mat);
 			}
 
 			//renderer.drawMesh(obj.m_mesh, shaderProgram, camera, obj.m_mat);

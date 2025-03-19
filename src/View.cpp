@@ -175,7 +175,7 @@ bool LoginView::createAccountWindow()
 ---------------------------------------------------------------------------------------------------------------------
 */
 
-MeshView::MeshView(GLFWwindow* window, UI backend, std::vector<meshObject>& meshes)
+MeshView::MeshView(GLFWwindow* window, UI backend, std::vector<std::shared_ptr<meshObject>> meshes)
     : m_uiBackend{ backend },
       //  m_controller{},
       m_window{ window },
@@ -197,11 +197,9 @@ void MeshView::render()
 
 void MeshView::sceneHierarchyWindow()
 {
-	static glm::vec3& translation = m_meshes.at(0).m_mesh.getTranslation();
-	static glm::vec3& rotation = m_meshes.at(0).m_mesh.getRotation();
-	static glm::vec3& scale = m_meshes.at(0).m_mesh.getScale();
-
-	//static int selectedIndex = -1;
+	static glm::vec3 translation;
+	static glm::vec3 rotation;
+	static glm::vec3 scale;
 
 	ImGui::Begin("Scene Hierarchy");
 	ImGui::SeparatorText("Objects");
@@ -215,7 +213,7 @@ void MeshView::sceneHierarchyWindow()
 	for (size_t i = 0; i < m_meshes.size(); i++)
 	{
 		bool isSelected = (m_selectedIndex == i);
-		if (ImGui::Selectable(m_meshes.at(i).m_mesh.m_meshName.c_str(), isSelected))
+		if (ImGui::Selectable(m_meshes.at(i)->m_mesh.m_meshName.c_str(), isSelected))
 		{
 			m_selectedIndex = (m_selectedIndex == i) ? -1 : i;
 		}
@@ -226,16 +224,22 @@ void MeshView::sceneHierarchyWindow()
 	ImGui::SeparatorText("Mesh Properties");
 	if (m_selectedIndex >= 0)
 	{
+		translation = m_meshes.at(m_selectedIndex)->m_mesh.m_translation;
+		rotation = m_meshes.at(m_selectedIndex)->m_mesh.m_rotation;
+		scale = m_meshes.at(m_selectedIndex)->m_mesh.m_scale;
+
 		// Mesh Controls
 		drawVec3Control("Translation", &translation, 0.0, 120);
 		drawVec3Control("Rotation", &rotation, 1.0, 120);
 		drawVec3Control("Scale", &scale, 1.0, 120);
 
 		// Manipulates the mesh based on the controllers
-		m_meshes.at(m_selectedIndex).m_mesh.translateMesh(translation);
-		m_meshes.at(m_selectedIndex).m_mesh.rotateMesh(rotation);
-		m_meshes.at(m_selectedIndex).m_mesh.scaleMesh(scale);
+		m_meshes.at(m_selectedIndex)->m_mesh.translateMesh(translation);
+		m_meshes.at(m_selectedIndex)->m_mesh.rotateMesh(rotation);
+		m_meshes.at(m_selectedIndex)->m_mesh.scaleMesh(scale);
 	}
+	ImGui::Text("%d", m_selectedIndex);
+
 
 	ImGui::EndChild();
 	ImGui::End();
@@ -243,16 +247,22 @@ void MeshView::sceneHierarchyWindow()
 
 void MeshView::materialEditorWindow()
 {
+	static glm::vec3 ambient;
+	static glm::vec3 specular;
+	static glm::vec3 diffuse;
+	static float shininess;
+	static glm::vec2 uvScale;
+
 	ImGui::Begin("Material Editor");
 	ImGui::NewLine();
 
 	if (m_selectedIndex >= 0)
 	{
-		static glm::vec3& ambient = m_meshes.at(m_selectedIndex).m_mat.ambient;
-		static glm::vec3& specular = m_meshes.at(m_selectedIndex).m_mat.specular;
-		static glm::vec3& diffuse = m_meshes.at(m_selectedIndex).m_mat.diffuse;
-		static float& shininess = m_meshes.at(m_selectedIndex).m_mat.shininess;
-		static glm::vec2& uvScale = m_meshes.at(m_selectedIndex).m_mesh.m_UVScale;
+		ambient = m_meshes.at(m_selectedIndex)->m_mat.ambient;
+		specular = m_meshes.at(m_selectedIndex)->m_mat.specular;
+		diffuse = m_meshes.at(m_selectedIndex)->m_mat.diffuse;
+		shininess = m_meshes.at(m_selectedIndex)->m_mat.shininess;
+		uvScale = m_meshes.at(m_selectedIndex)->m_mesh.m_UVScale;
 
 		ImGui::SeparatorText("Material Properties");
 
@@ -276,10 +286,17 @@ void MeshView::materialEditorWindow()
 			ImGui::NewLine();
 			ImGui::Image((ImTextureID)(intptr_t)meshes.at(i).m_mesh.texture.getTextures()[i], ImVec2(250, 250));
 		}*/
-		ImGui::Image((ImTextureID)(intptr_t)m_meshes.at(m_selectedIndex).m_mesh.m_texture.getTextures()[0], ImVec2(512, 512));
+		ImGui::Image((ImTextureID)(intptr_t)m_meshes.at(m_selectedIndex)->m_mesh.m_texture.getTextures()[0], ImVec2(512, 512));
 
 		ImGui::NewLine();
 		drawVec2Control("UV Scale", &uvScale, 1.0f, 100.0f);
+
+		m_meshes.at(m_selectedIndex)->m_mat.ambient = ambient;
+		m_meshes.at(m_selectedIndex)->m_mat.specular = specular;
+		m_meshes.at(m_selectedIndex)->m_mat.diffuse = diffuse;
+		m_meshes.at(m_selectedIndex)->m_mat.shininess = shininess;
+		m_meshes.at(m_selectedIndex)->m_mesh.m_UVScale = uvScale;
+
 	}
 	ImGui::End();
 }

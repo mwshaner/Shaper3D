@@ -162,7 +162,7 @@ private:
 class MeshView
 {
 public:
-	MeshView(GLFWwindow* window, UI backend, std::vector<meshObject>& meshes);
+	MeshView(GLFWwindow* window, UI backend, std::vector<std::shared_ptr<meshObject>> meshes);
 	void render();
 	void sceneHierarchyWindow();
 	void materialEditorWindow();
@@ -174,6 +174,6 @@ private:
 	//Controller m_controller;
 	GLFWwindow* m_window;
 	ImGuiIO& m_io;
-	std::vector<meshObject>& m_meshes;
+	std::vector<std::shared_ptr<meshObject>> m_meshes;
 	int16_t m_selectedIndex = -1;
 };
