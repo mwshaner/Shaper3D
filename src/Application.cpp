@@ -9,7 +9,7 @@
 #include "../thirdparty/imgui-docking/imgui/imgui.h"
 #include "../thirdparty/imgui-docking/imgui/backends/imgui_impl_opengl3.h"
 #include "../thirdparty/imgui-docking/imgui/backends/imgui_impl_glfw.h"
-#include "camera.h" // Camera class
+#include "camera.h" 
 #include "shader.h"
 #include "Mesh.h"
 #include "Material.h"
@@ -32,10 +32,7 @@ using namespace std;
 // Unnamed namespace
 namespace
 {
-	// Window title
 	const char* const WINDOW_TITLE = "CS-499 Capstone";
-
-	// Window height and width
 	const int WINDOW_WIDTH = 1600;
 	const int WINDOW_HEIGHT = 1200;
 
@@ -43,9 +40,12 @@ namespace
 	Camera camera(glm::vec3(0.0f, 4.0f, 20.0f));
 	float lastX = WINDOW_WIDTH / 2.0f;
 	float lastY = WINDOW_HEIGHT / 2.0f;
+
+	// Key utils
 	bool firstMouse = true;
 	bool SHIFT = false;
 	bool PAN = false;
+	bool keyState = false;
 
 	enum CameraModes
 	{
@@ -53,29 +53,30 @@ namespace
 		ORTHOGRAPHIC
 	};
 
+	enum Primitives
+	{
+		PLANE,
+		CUBE,
+		CYLINDER,
+		PYRAMID
+	};
+
 
 	CameraModes mode = PERSPECTIVE;
 
-	// Frame time
-	float deltaTime = 0.0f; // Time between current frame and last frame
+	float deltaTime = 0.0f; 
 	float lastFrame = 0.0f;
 
-	// Main GLFW window
 	GLFWwindow* gWindow = nullptr;
 
-	// Shader program
 	Shader lightShader;
 	Shader shaderProgram;
 
-	// light shader source code
 	const char* lampVertexShaderSource = "../../../resources/lampVertex.vs";
 	const char* lampFragmentShaderSource = "../../../resources/lampFrag.fs";
-
-	// cube shader program source code
 	const char* cubeVertexShaderSource = "../../../resources/cubeVertex.vs";
 	const char* cubeFragmentShaderSource = "../../../resources/cubeFrag.fs";
-
-	bool keyState = false;
+	
 	std::vector<std::shared_ptr<meshObject>> meshes;
 }
 
@@ -94,17 +95,22 @@ void UMouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 glm::mat4 UGetProjectionMatrix();
 
 
-
-
 // Main
 int main(int argc, char* argv[])
 {
-	typedef std::tuple<std::string, std::string, std::string> userRecord;
-
 	if (!UInitialize(argc, argv, &gWindow))
 	{
 		return EXIT_FAILURE;
 	}
+
+	shaderProgram.load(cubeVertexShaderSource, cubeFragmentShaderSource);
+	lightShader.load(lampVertexShaderSource, lampFragmentShaderSource);
+
+	// Set backgroundcolor of the window to black
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	const char* glsl_version = "#version 100";
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	Renderer renderer;
 
@@ -112,91 +118,74 @@ int main(int argc, char* argv[])
 	Mesh lightCube;
 	Mesh soda;
 	Mesh coaster;
-	//Mesh kiss;
-	//Mesh table;
-	//Mesh chapstick;
-	//Mesh rubikscube;
-	//Mesh wall1;
-	//Mesh wall2;
+	Mesh kiss;
+	Mesh chapstick;
+	Mesh rubikscube;
 	soda.m_meshName = "Cylinder";
-	coaster.m_meshName = "Coaster";
+	coaster.m_meshName = "Cube";
+	kiss.m_meshName = "Pyramid";
+	chapstick.m_meshName = "Cylinder.001";
+	rubikscube.m_meshName = "Cube.001";
 
 	// Create the different meshes
 	soda.createCylinder(36, 3.0f, 1.0f);
 	coaster.createCube(0.5f, 0.5f, 0.05f);
-	//kiss.createPyramid(0.5, 0.5, 0.5);
-	//table.createPlane(30.0, 30.0);
-	//chapstick.createCylinder(36, 5.0f, 1.0f);
-	//rubikscube.createCube(0.5f, 0.5f, 0.5f);
+	kiss.createPyramid(0.5, 0.5, 0.5);
+	chapstick.createCylinder(36, 5.0f, 1.0f);
+	rubikscube.createCube(0.5f, 0.5f, 0.5f);
 	lightCube.createCube(0.5f, 0.5f, 0.5f);
-	//wall1.createPlane(30.0, 30.0);
-	//wall2.createPlane(30.0, 30.0);
-
 
 	// Send the textures to the mesh objects
-	const char* tex1FileName = "../../../Textures/hersheyKiss.png";
-	//kiss.createTexture(1, tex1FileName);
-	const char* tex2FileName = "../../../Textures/coastertop.png";
-	coaster.createTexture(1, tex2FileName);
-	//const char* tex3FileName = "../../../Textures/table.jpg";
-	//table.createTexture(1, tex3FileName);
 	const char* tex4FileName = "../../../Textures/coke.png";
 	const char* tex5FileName = "../../../Textures/sodacaps.png";
 	soda.createTexture(2, tex4FileName, tex5FileName);
-	//const char* tex6FileName = "../../../Textures/chapstick.png";
-	//const char* tex7FileName = "../../../Textures/chapstickcap.png";
-	//chapstick.createTexture(2, tex6FileName, tex7FileName);
-	//const char* tex8FileName = "../../../Textures/rubikscube.jpg";
-	//rubikscube.createTexture(1, tex8FileName);
-	//const char* tex9FileName = "../../../Textures/walls.png";
-	//wall1.createTexture(1, tex9FileName);
-	//const char* tex10FileName = "../../../Textures/walls2.png";
-	//wall2.createTexture(1, tex10FileName);
+	const char* tex2FileName = "../../../Textures/coastertop.png";
+	coaster.createTexture(1, tex2FileName);
+	const char* tex1FileName = "../../../Textures/hersheyKiss.png";
+	kiss.createTexture(1, tex1FileName);
+	const char* tex6FileName = "../../../Textures/chapstick.png";
+	const char* tex7FileName = "../../../Textures/chapstickcap.png";
+	chapstick.createTexture(2, tex6FileName, tex7FileName);
+	const char* tex8FileName = "../../../Textures/rubikscube.jpg";
+	rubikscube.createTexture(1, tex8FileName);
 
-	// Create the shader program
-	shaderProgram.load(cubeVertexShaderSource, cubeFragmentShaderSource);
-	lightShader.load(lampVertexShaderSource, lampFragmentShaderSource);
-
-	// Set backgroundcolor of the window to black
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-
-	const char* glsl_version = "#version 100";
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
+	// Materials
 	Material sodaMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(0.7f, 0.6f, 0.6f), 0.25f);
 	Material coasterMat(glm::vec3(0.25f, 0.20725f, 0.20725f), glm::vec3(1.0f, 0.829f, 0.829f), glm::vec3(0.296648f, 0.296648f, 0.296648f), 1.5f);
 	Material kissMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
+	Material chapstickMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
+	Material rubiksCubeMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
 
 	meshObject obj(soda, sodaMat);
 	meshObject obj2(coaster, coasterMat);
-	//meshObject obj3(kiss, kissMat);
+	meshObject obj3(kiss, kissMat);
+	meshObject obj4(chapstick, chapstickMat);
+	meshObject obj5(rubikscube, rubiksCubeMat);
 
+	// Initial positions
+	obj.m_mesh.rotateMesh(glm::vec3(0.0, 1.0f, 0.0f));
+	obj.m_mesh.translateMesh(glm::vec3(0.0f, 1.5f, 0.0f));
 	obj2.m_mesh.scaleMesh(glm::vec3(3.0f, 3.0f, 3.0f));
 	obj2.m_mesh.translateMesh(glm::vec3(0.0f, -0.1f, 0.0f));
 	obj2.m_mesh.rotateMesh(glm::vec3(0.0, 1.0f, 0.0f));
+	obj3.m_mesh.translateMesh(glm::vec3(3.0f, 4.2f, 0.0f));
+	obj3.m_mesh.rotateMesh(glm::vec3(0.0f, 1.0f, 0.15f));
+	obj4.m_mesh.scaleMesh(glm::vec3(0.4f, 0.4f, 0.4f));
+	obj4.m_mesh.rotateMesh(glm::vec3(1.0f, 1.42f, 0.16f));
+	obj4.m_mesh.translateMesh(glm::vec3(-0.4f, 5.0f, -2.0f));
+	obj5.m_mesh.translateMesh(glm::vec3(-3.0f, 5.1f, 0.0f));
 
-	//obj.m_mesh.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0f, 0.0f)));
-	//obj.m_mesh.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
-
-	obj.m_mesh.rotateMesh(glm::vec3(0.0, 1.0f, 0.0f));
-	obj.m_mesh.translateMesh(glm::vec3(0.0f, 1.5f, 0.0f));
-
-	std::shared_ptr<meshObject> sodaPtr = make_shared<meshObject>(obj);
-	std::shared_ptr<meshObject> coasterPtr = make_shared<meshObject>(obj2);
-
-	meshes.emplace_back(sodaPtr);
-	meshes.emplace_back(coasterPtr);
-	//meshes.emplace_back(obj2);
-	//meshes.push_back(obj3);
+	meshes.emplace_back(make_shared<meshObject>(obj));
+	meshes.emplace_back(make_shared<meshObject>(obj2));
+	meshes.emplace_back(make_shared<meshObject>(obj3));
+	meshes.push_back(make_shared<meshObject>(obj4));
+	meshes.push_back(make_shared<meshObject>(obj5));
 
 	static GuiBackend guiBackend{ gWindow };
 	DB model;
 	LoginView loginView{ guiBackend };
 	LoginController loginCntlr{ loginView, model };
 	MeshView meshView{ guiBackend, meshes };
-
-	loginCntlr.query();
 
 	// RENDER LOOP START
 	while (!glfwWindowShouldClose(gWindow))
