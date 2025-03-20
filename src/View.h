@@ -199,16 +199,14 @@ public:
 class LoginView : public IView
 {
 public:
-	LoginView(GLFWwindow* window, UI backend);
+	LoginView(GuiBackend backend);
 	void render();
 	bool loginWindow();
 	bool createAccountWindow();
 	bool getLoginStatus() { return m_loginStatus; }
 
 private:
-	UI m_uiBackend;
-	GLFWwindow* m_window;
-	ImGuiIO& m_io;
+	GuiBackend m_guiBackend;
 	bool m_loginStatus;
 };
 
@@ -219,15 +217,13 @@ private:
 class MeshView : public IView
 {
 public:
-	MeshView(GLFWwindow* window, UI backend, std::vector<std::shared_ptr<meshObject>> meshes);
+	MeshView(GuiBackend backend, std::vector<std::shared_ptr<meshObject>> meshes);
 	void render();
 	void sceneHierarchyWindow();
 	void materialEditorWindow();
 
 private:
-	UI m_uiBackend;
-	GLFWwindow* m_window;
-	ImGuiIO& m_io;
+	GuiBackend m_guiBackend;
 	std::vector<std::shared_ptr<meshObject>> m_meshes;
 	int16_t m_selectedIndex = -1;
 };

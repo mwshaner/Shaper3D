@@ -8,10 +8,10 @@
 #include <../thirdparty/glfw-3.3.2/include/GLFW/glfw3.h>
 
 
-class UI
+class GuiBackend
 {
 public:
-	UI(GLFWwindow* window);
+	GuiBackend(GLFWwindow* window);
 	void prepareDockspace();
 	void newUIFrame();
 	void renderUI();

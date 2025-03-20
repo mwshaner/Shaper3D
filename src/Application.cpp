@@ -190,11 +190,11 @@ int main(int argc, char* argv[])
 	//meshes.emplace_back(obj2);
 	//meshes.push_back(obj3);
 
-	static UI guiBackend{ gWindow };
+	static GuiBackend guiBackend{ gWindow };
 	DB model;
-	LoginView loginView{ gWindow, guiBackend };
+	LoginView loginView{ guiBackend };
 	LoginController loginCntlr{ loginView, model };
-	MeshView meshView{ gWindow, guiBackend, meshes };
+	MeshView meshView{ guiBackend, meshes };
 
 	loginCntlr.query();
 

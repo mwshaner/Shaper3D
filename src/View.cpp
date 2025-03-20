@@ -1,17 +1,22 @@
 #include "View.h"
 
 /*
--------------------------------------------------------------------------------------------------------------
-                       LOGIN VIEW
--------------------------------------------------------------------------------------------------------------
+*		   File: View.cpp
+*		   Author: Mason Shaner
+*		   Date: 3/20/2025
+*		   Description:
+*		   This file contains the implementations for the methods of the LoginView and MeshView classes
 */
 
 
-LoginView::LoginView(GLFWwindow* window, UI backend)
-    : m_uiBackend{ backend },
-      //m_controller{},
-      m_window{ window },
-      m_io{ m_uiBackend.getIO() },
+/*
+---------------------------------------------------------------------------------------------------------
+                                         LoginView
+---------------------------------------------------------------------------------------------------------
+*/
+
+LoginView::LoginView(GuiBackend backend)
+    : m_guiBackend{ backend },
       m_loginStatus{ false }
 {
 
@@ -19,16 +24,10 @@ LoginView::LoginView(GLFWwindow* window, UI backend)
 
 void LoginView::render()
 {
-    /*bool (*funcPtr)() = &login;
-
-    m_uiBackend.newUIFrame();
-    m_loginStatus = m_uiBackend.renderUI(m_window, funcPtr);*/
-
-    m_uiBackend.newUIFrame();
-    m_uiBackend.prepareDockspace();
+	m_guiBackend.newUIFrame();
+	m_guiBackend.prepareDockspace();
     m_loginStatus = loginWindow();
-    m_uiBackend.renderUI();
-
+	m_guiBackend.renderUI();
 }
 
 bool LoginView::loginWindow()
@@ -170,31 +169,44 @@ bool LoginView::createAccountWindow()
 
 
 /*
----------------------------------------------------------------------------------------------------------------------
-                       MESH VIEW
----------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+										 MeshView
+---------------------------------------------------------------------------------------------------------
 */
 
-MeshView::MeshView(GLFWwindow* window, UI backend, std::vector<std::shared_ptr<meshObject>> meshes)
-    : m_uiBackend{ backend },
-      //  m_controller{},
-      m_window{ window },
-      m_io{ m_uiBackend.getIO() },
+MeshView::MeshView(GuiBackend backend, std::vector<std::shared_ptr<meshObject>> meshes)
+    : m_guiBackend{ backend },
       m_meshes{ meshes }
 {
 
 }
 
+/*
+    render() uses the ImGui backend to draw whatever class methods
+	are called between prepareDockspace() and renderUI().
+*/
 void MeshView::render()
 {
-    m_uiBackend.setFont(std::string("RudaBold25"));
-    m_uiBackend.newUIFrame();
-    m_uiBackend.prepareDockspace();
+	// See GuiBackend constructor for the available fonts and their IDs
+    m_guiBackend.setFont(std::string("RudaBold25"));
+    m_guiBackend.newUIFrame();
+    m_guiBackend.prepareDockspace();
+
+	// The view methods should always be called after prepareDockspace()
     sceneHierarchyWindow();
     materialEditorWindow();
-    m_uiBackend.renderUI();
+	// and before renderUI()
+
+	m_guiBackend.renderUI();
 }
 
+
+/*
+    sceneHierarchyWindow() displays a list of all current 3d meshes in the scene.
+	These meshes can be selected which will then activate the mesh properties panel 
+	for that object, allowing the user to control the translation, rotation, and scale 
+	using the vec3 controls.
+*/
 void MeshView::sceneHierarchyWindow()
 {
 	static glm::vec3 translation;
@@ -205,9 +217,9 @@ void MeshView::sceneHierarchyWindow()
 	ImGui::SeparatorText("Objects");
 
 	ImVec2 availSize = ImGui::GetContentRegionAvail();
-
 	float topHeight = availSize.y * 0.5f;
 
+	// The selectable mesh object list
 	ImGui::BeginChild("TopChild", ImVec2(0, topHeight), true);
 
 	for (size_t i = 0; i < m_meshes.size(); i++)
@@ -220,10 +232,12 @@ void MeshView::sceneHierarchyWindow()
 	}
 	ImGui::EndChild();
 
+	// The mesh properties panel
 	ImGui::BeginChild("Object Properties", ImVec2(0, 0), true);
 	ImGui::SeparatorText("Mesh Properties");
 	if (m_selectedIndex >= 0)
 	{
+		// get the selected objects TRS vec3s
 		translation = m_meshes.at(m_selectedIndex)->m_mesh.m_translation;
 		rotation = m_meshes.at(m_selectedIndex)->m_mesh.m_rotation;
 		scale = m_meshes.at(m_selectedIndex)->m_mesh.m_scale;
@@ -233,16 +247,20 @@ void MeshView::sceneHierarchyWindow()
 		drawVec3Control("Rotation", rotation, 1.0, 120);
 		drawVec3Control("Scale", scale, 1.0, 120);
 
-		// Manipulates the mesh based on the controllers
+		// Update the selected objects properties
 		m_meshes.at(m_selectedIndex)->m_mesh.translateMesh(translation);
 		m_meshes.at(m_selectedIndex)->m_mesh.rotateMesh(rotation);
 		m_meshes.at(m_selectedIndex)->m_mesh.scaleMesh(scale);
 	}
-
 	ImGui::EndChild();
 	ImGui::End();
 }
 
+/*
+    materialEditorWindow() displays the material and texture properties of the selected object.
+	The specular, diffuse, ambient, shininess, and UV scale can be controlled via the vec3 and
+	vec2 controls.
+*/
 void MeshView::materialEditorWindow()
 {
 	static glm::vec3 ambient;
@@ -251,11 +269,13 @@ void MeshView::materialEditorWindow()
 	static float shininess;
 	static glm::vec2 uvScale;
 
+	
 	ImGui::Begin("Material Editor");
 	ImGui::NewLine();
 
 	if (m_selectedIndex >= 0)
 	{
+		// get the selected objects material vec3's
 		ambient = m_meshes.at(m_selectedIndex)->m_mat.ambient;
 		specular = m_meshes.at(m_selectedIndex)->m_mat.specular;
 		diffuse = m_meshes.at(m_selectedIndex)->m_mat.diffuse;
@@ -269,6 +289,7 @@ void MeshView::materialEditorWindow()
 		drawVec3Control("Specular", specular, 0.0, 120);
 		drawVec3Control("Diffuse", diffuse, 0.0, 120);
 
+		// Shininess dragFloat
 		ImGui::Columns(2);
 		ImGui::SetColumnWidth(0, 120.0f);
 		ImGui::Text("Shininess");
@@ -279,16 +300,14 @@ void MeshView::materialEditorWindow()
 		ImGui::NewLine();
 		ImGui::SeparatorText("Textures");
 
-		/*for (int i = 0; i < 2; i++)
-		{
-			ImGui::NewLine();
-			ImGui::Image((ImTextureID)(intptr_t)meshes.at(i).m_mesh.texture.getTextures()[i], ImVec2(250, 250));
-		}*/
+		// Display the texture of the selected object
 		ImGui::Image((ImTextureID)(intptr_t)m_meshes.at(m_selectedIndex)->m_mesh.m_texture.getTextures()[0], ImVec2(512, 512));
 
+		// UV scale controls
 		ImGui::NewLine();
 		drawVec2Control("UV Scale", uvScale, 1.0f, 100.0f);
 
+		// Update the selected objects properties
 		m_meshes.at(m_selectedIndex)->m_mat.ambient = ambient;
 		m_meshes.at(m_selectedIndex)->m_mat.specular = specular;
 		m_meshes.at(m_selectedIndex)->m_mat.diffuse = diffuse;

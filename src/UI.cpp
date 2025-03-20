@@ -1,6 +1,6 @@
 #include "UI.h"
 
-UI::UI(GLFWwindow* window)
+GuiBackend::GuiBackend(GLFWwindow* window)
 	: m_window{ window },
 	  m_io{ [&]() -> ImGuiIO& { ImGui::CreateContext(); return ImGui::GetIO(); } () }, // lambda initializes m_io to ImGuiIO&
 	  m_glslVersion{ "#version 100" },
@@ -92,7 +92,7 @@ UI::UI(GLFWwindow* window)
 }
 
 
-void UI::prepareDockspace()
+void GuiBackend::prepareDockspace()
 {
 	// Transparent dockspace
 	ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -119,7 +119,7 @@ void UI::prepareDockspace()
 	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags, nullptr);
 }
 
-void UI::newUIFrame()
+void GuiBackend::newUIFrame()
 {
 	// Start the Dear ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
@@ -127,7 +127,7 @@ void UI::newUIFrame()
 	ImGui::NewFrame();
 }
 
-void UI::renderUI()
+void GuiBackend::renderUI()
 {
 	// End the dockspace opened in prepareDockspace()
 	ImGui::End();
@@ -210,7 +210,7 @@ void UI::renderUI()
 //	}
 //}
 
-void UI::loginUI()
+void GuiBackend::loginUI()
 {
     static char username[128] = "";
     static char password[128] = "";
@@ -234,7 +234,7 @@ void UI::loginUI()
     ImGui::End();
 }
 
-void UI::setFont(std::string& fontName)
+void GuiBackend::setFont(std::string& fontName)
 {
 	try
 	{
@@ -246,7 +246,7 @@ void UI::setFont(std::string& fontName)
 	}
 }
 
-void UI::terminateUI()
+void GuiBackend::terminateUI()
 {
 	// Cleanup
 	ImGui_ImplOpenGL3_Shutdown();
