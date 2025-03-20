@@ -229,9 +229,9 @@ void MeshView::sceneHierarchyWindow()
 		scale = m_meshes.at(m_selectedIndex)->m_mesh.m_scale;
 
 		// Mesh Controls
-		drawVec3Control("Translation", &translation, 0.0, 120);
-		drawVec3Control("Rotation", &rotation, 1.0, 120);
-		drawVec3Control("Scale", &scale, 1.0, 120);
+		drawVec3Control("Translation", translation, 0.0, 120);
+		drawVec3Control("Rotation", rotation, 1.0, 120);
+		drawVec3Control("Scale", scale, 1.0, 120);
 
 		// Manipulates the mesh based on the controllers
 		m_meshes.at(m_selectedIndex)->m_mesh.translateMesh(translation);
@@ -265,9 +265,9 @@ void MeshView::materialEditorWindow()
 		ImGui::SeparatorText("Material Properties");
 
 		// Mesh Controls
-		drawVec3Control("Ambient", &ambient, 0.0, 120);
-		drawVec3Control("Specular", &specular, 0.0, 120);
-		drawVec3Control("Diffuse", &diffuse, 0.0, 120);
+		drawVec3Control("Ambient", ambient, 0.0, 120);
+		drawVec3Control("Specular", specular, 0.0, 120);
+		drawVec3Control("Diffuse", diffuse, 0.0, 120);
 
 		ImGui::Columns(2);
 		ImGui::SetColumnWidth(0, 120.0f);
@@ -287,7 +287,7 @@ void MeshView::materialEditorWindow()
 		ImGui::Image((ImTextureID)(intptr_t)m_meshes.at(m_selectedIndex)->m_mesh.m_texture.getTextures()[0], ImVec2(512, 512));
 
 		ImGui::NewLine();
-		drawVec2Control("UV Scale", &uvScale, 1.0f, 100.0f);
+		drawVec2Control("UV Scale", uvScale, 1.0f, 100.0f);
 
 		m_meshes.at(m_selectedIndex)->m_mat.ambient = ambient;
 		m_meshes.at(m_selectedIndex)->m_mat.specular = specular;
