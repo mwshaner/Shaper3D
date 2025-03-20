@@ -1,4 +1,4 @@
-#include "UI.h"
+#include "GuiBackend.h"
 
 GuiBackend::GuiBackend(GLFWwindow* window)
 	: m_window{ window },
