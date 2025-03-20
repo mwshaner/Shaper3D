@@ -1,17 +1,28 @@
 #include "Controller.h"
 
-
 /*
-----------------------------------------------------------------
-					   LOGIN CONTROLLER
-----------------------------------------------------------------
+*		   File: Controller.cpp
+*		   Author: Mason Shaner
+*		   Date: 3/20/2025
+*		   Description:
+*		   This file contains the implementation of the different types of controllers. 
+*          Currently only a CRUD controller is implemented.
 */
 
-LoginController::LoginController(LoginView& view, DB& model)
+
+/*
+-------------------------------------------------------------------------------------------------------
+					   CRUDController
+-------------------------------------------------------------------------------------------------------
+*/
+
+CRUDController::CRUDController(LoginView& view, DB& model)
 	: m_view{ view },
 	  m_model{ model }
 {
 	m_model.connect();
+
+	// loads dummy data to an in memory sqlite3 db
 	m_model.initialize_database();
 
 	std::vector<userRecord> records;
@@ -19,7 +30,7 @@ LoginController::LoginController(LoginView& view, DB& model)
 
 	bool result = m_model.run_query(sql, records);
 
-
+	
 	for (auto record : records)
 	{
 		std::cout << "User: " << std::get<1>(record) << " ID = " << std::get<0>(record) << " PASSWORD = " << std::get<2>(record) << " " << std::endl;
@@ -28,8 +39,18 @@ LoginController::LoginController(LoginView& view, DB& model)
 	std::cout << std::endl;
 }
 
-bool LoginController::query()
+
+bool CRUDController::create()
 {
+	// TODO: implement create user query
+	return false;
+}
+
+
+bool CRUDController::read()
+{
+	//TODO: implement login query
+
 	std::vector<userRecord> records;
 	std::string sql = "SELECT * FROM USERS WHERE USERNAME = 'Mason' AND PASSWORD = '12345'";
 
@@ -44,7 +65,19 @@ bool LoginController::query()
 	return result;
 }
 
-void LoginController::shutdown()
+bool CRUDController::update()
+{
+	// TODO: create update user query
+	return false;
+}
+
+bool CRUDController::deleteUser()
+{
+	// TODO: create delete user query
+	return false;
+}
+
+void CRUDController::closeConnection()
 {
 	m_model.closeDB();
 }

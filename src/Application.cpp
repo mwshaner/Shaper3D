@@ -183,7 +183,7 @@ int main(int argc, char* argv[])
 	static GuiBackend guiBackend{ gWindow };
 	DB model;
 	LoginView loginView{ guiBackend };
-	LoginController loginCntlr{ loginView, model };
+	CRUDController loginCntlr{ loginView, model };
 	MeshView meshView{ guiBackend, meshes };
 
 	// RENDER LOOP START
