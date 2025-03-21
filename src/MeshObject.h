@@ -3,19 +3,18 @@
 #include "Material.h"
 
 /*
-*		   File: meshObject.h
+*		   File: MeshObject.h
 *		   Author: Mason Shaner
 *		   Date: 3/20/2025
-*		   Description: Main application for creating an OpenGL window and rendering different mesh objects
+*		   Description: MeshOject type contains Mesh and Material members
 */
 
-
-struct meshObject
+struct MeshObject
 {
 	Mesh m_mesh;
 	Material m_mat;
 
-	meshObject(Mesh& mesh, Material& mat)
+	MeshObject(Mesh& mesh, Material& mat)
 		: m_mesh{ mesh },
 		  m_mat{ mat }
 	{

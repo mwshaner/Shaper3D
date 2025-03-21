@@ -174,7 +174,7 @@ bool LoginView::createAccountWindow()
 ---------------------------------------------------------------------------------------------------------
 */
 
-MeshView::MeshView(GuiBackend backend, std::vector<std::shared_ptr<meshObject>> meshes)
+MeshView::MeshView(GuiBackend backend, std::vector<std::shared_ptr<MeshObject>> meshes)
     : m_guiBackend{ backend },
       m_meshes{ meshes }
 {

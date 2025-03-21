@@ -75,7 +75,7 @@ namespace
 	const char* cubeVertexShaderSource = "../../../resources/cubeVertex.vs";
 	const char* cubeFragmentShaderSource = "../../../resources/cubeFrag.fs";
 	
-	std::vector<std::shared_ptr<meshObject>> meshes;
+	std::vector<std::shared_ptr<MeshObject>> meshes;
 }
 
 
@@ -154,11 +154,11 @@ int main(int argc, char* argv[])
 	Material chapstickMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
 	Material rubiksCubeMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
 
-	meshObject obj(soda, sodaMat);
-	meshObject obj2(coaster, coasterMat);
-	meshObject obj3(kiss, kissMat);
-	meshObject obj4(chapstick, chapstickMat);
-	meshObject obj5(rubikscube, rubiksCubeMat);
+	MeshObject obj(soda, sodaMat);
+	MeshObject obj2(coaster, coasterMat);
+	MeshObject obj3(kiss, kissMat);
+	MeshObject obj4(chapstick, chapstickMat);
+	MeshObject obj5(rubikscube, rubiksCubeMat);
 
 	// Initial positions
 	obj.m_mesh.rotateMesh(glm::vec3(0.0, 1.0f, 0.0f));
@@ -173,11 +173,11 @@ int main(int argc, char* argv[])
 	obj4.m_mesh.translateMesh(glm::vec3(-0.4f, 5.0f, -2.0f));
 	obj5.m_mesh.translateMesh(glm::vec3(-3.0f, 5.1f, 0.0f));
 
-	meshes.emplace_back(make_shared<meshObject>(obj));
-	meshes.emplace_back(make_shared<meshObject>(obj2));
-	meshes.emplace_back(make_shared<meshObject>(obj3));
-	meshes.push_back(make_shared<meshObject>(obj4));
-	meshes.push_back(make_shared<meshObject>(obj5));
+	meshes.emplace_back(make_shared<MeshObject>(obj));
+	meshes.emplace_back(make_shared<MeshObject>(obj2));
+	meshes.emplace_back(make_shared<MeshObject>(obj3));
+	meshes.push_back(make_shared<MeshObject>(obj4));
+	meshes.push_back(make_shared<MeshObject>(obj5));
 
 	static GuiBackend guiBackend{ gWindow };
 	sqlModel model;

@@ -50,14 +50,14 @@ private:
 class MeshView : public IView
 {
 public:
-	MeshView(GuiBackend backend, std::vector<std::shared_ptr<meshObject>> meshes);
+	MeshView(GuiBackend backend, std::vector<std::shared_ptr<MeshObject>> meshes);
 	void render() override;
 	void sceneHierarchyWindow();
 	void materialEditorWindow();
 
 private:
 	GuiBackend m_guiBackend;
-	std::vector<std::shared_ptr<meshObject>> m_meshes;
+	std::vector<std::shared_ptr<MeshObject>> m_meshes;
 	int16_t m_selectedIndex = -1;
 };
 
