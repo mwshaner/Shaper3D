@@ -16,7 +16,7 @@
 -------------------------------------------------------------------------------------------------------
 */
 
-CRUDController::CRUDController(LoginView& view, DB& model)
+CRUDController::CRUDController(LoginView& view, sqlModel& model)
 	: m_view{ view },
 	  m_model{ model }
 {
@@ -28,7 +28,7 @@ CRUDController::CRUDController(LoginView& view, DB& model)
 	std::vector<userRecord> records;
 	std::string sql = "SELECT * FROM USERS";
 
-	bool result = m_model.run_query(sql, records);
+	bool result = m_model.runQuery(sql, records);
 
 	
 	for (auto record : records)
@@ -54,7 +54,7 @@ bool CRUDController::read()
 	std::vector<userRecord> records;
 	std::string sql = "SELECT * FROM USERS WHERE USERNAME = 'Mason' AND PASSWORD = '12345'";
 
-	bool result = m_model.run_query(sql, records);
+	bool result = m_model.runQuery(sql, records);
 
 	
 	for (auto record : records)
@@ -79,5 +79,5 @@ bool CRUDController::deleteUser()
 
 void CRUDController::closeConnection()
 {
-	m_model.closeDB();
+	m_model.disconnect();
 }

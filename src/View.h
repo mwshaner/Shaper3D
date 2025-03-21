@@ -14,9 +14,57 @@
 */
 
 
+/*
+    The view interface
+*/
+class IView
+{
+public:
+	virtual ~IView() = default;
+	virtual void render() = 0;
+};
+
+
+/*
+	LoginView is responsible for implementing the view component of the login UI.
+	A LoginView object will be used by a CRUDController object to interact with
+	the database in the model class.
+*/
+class LoginView : public IView
+{
+public:
+	LoginView(GuiBackend backend);
+	void render() override;
+	bool loginWindow();
+	bool createAccountWindow();
+	bool getLoginStatus() { return m_loginStatus; }
+
+private:
+	GuiBackend m_guiBackend;
+	bool m_loginStatus;
+};
+
+/*
+	MeshView is responsible for implementing the main UI of the application including the 
+	scene hierarchy panel and material editor. 
+*/
+class MeshView : public IView
+{
+public:
+	MeshView(GuiBackend backend, std::vector<std::shared_ptr<meshObject>> meshes);
+	void render() override;
+	void sceneHierarchyWindow();
+	void materialEditorWindow();
+
+private:
+	GuiBackend m_guiBackend;
+	std::vector<std::shared_ptr<meshObject>> m_meshes;
+	int16_t m_selectedIndex = -1;
+};
+
 // ImGui Utility functions for centering buttons and drawing widgets
-namespace 
-{	
+namespace
+{
 	// draws a button centered in the current window
 	bool ButtonCenteredOnLine(const char* label, float alignment = 0.5f)
 	{
@@ -113,8 +161,8 @@ namespace
 	}
 
 	/*
-	       Draws a drag float vec2 control of the form:
-		   
+		   Draws a drag float vec2 control of the form:
+
 		   [X][0.0000][Y][0.0000]
 
 		   which controls the XY axes with dragFloats, and where the XY buttons
@@ -124,8 +172,8 @@ namespace
 	static void drawVec2Control(const std::string& label, glm::vec2& values, float resetValue = 0.0f, float columnWidth = 100.0f)
 	{
 		/*
-		    NOTE: always use a unique label when calling this function or the dragfloats will overwrite each other when this 
-		    function is called multiple times
+			NOTE: always use a unique label when calling this function or the dragfloats will overwrite each other when this
+			function is called multiple times
 		*/
 		ImGui::PushID(label.c_str());
 
@@ -178,52 +226,3 @@ namespace
 		ImGui::PopID();
 	}
 }
-
-
-/*
-    The view interface
-*/
-class IView
-{
-public:
-	virtual ~IView() = default;
-	virtual void render() = 0;
-};
-
-
-/*
-	LoginView is responsible for implementing the view component of the login UI.
-	A LoginView object will be used by a CRUDController object to interact with
-	the database in the model class.
-*/
-class LoginView : public IView
-{
-public:
-	LoginView(GuiBackend backend);
-	void render();
-	bool loginWindow();
-	bool createAccountWindow();
-	bool getLoginStatus() { return m_loginStatus; }
-
-private:
-	GuiBackend m_guiBackend;
-	bool m_loginStatus;
-};
-
-/*
-	MeshView is responsible for implementing the main UI of the application including the 
-	scene hierarchy panel and material editor. 
-*/
-class MeshView : public IView
-{
-public:
-	MeshView(GuiBackend backend, std::vector<std::shared_ptr<meshObject>> meshes);
-	void render();
-	void sceneHierarchyWindow();
-	void materialEditorWindow();
-
-private:
-	GuiBackend m_guiBackend;
-	std::vector<std::shared_ptr<meshObject>> m_meshes;
-	int16_t m_selectedIndex = -1;
-};

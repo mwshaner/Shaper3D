@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
 	meshes.push_back(make_shared<meshObject>(obj5));
 
 	static GuiBackend guiBackend{ gWindow };
-	DB model;
+	sqlModel model;
 	LoginView loginView{ guiBackend };
 	CRUDController loginCntlr{ loginView, model };
 	MeshView meshView{ guiBackend, meshes };

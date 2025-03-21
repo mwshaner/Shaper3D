@@ -1,12 +1,24 @@
 #include "DB.h"
 
-DB::DB()
+/*
+*		   File: DB.cpp
+*		   Author: Mason Shaner
+*		   Date: 3/20/2025
+*		   Description:
+*		    The Model class implements the connection to and communication with
+*          a database. Currently, only in-memory sqlite3 databases are implemented, however
+*          derived classes can be created to support different database systems as needed.
+*/
+
+
+sqlModel::sqlModel()
     : m_db{ nullptr }
 {
  
 }
 
-int DB::connect()
+// 
+int sqlModel::connect()
 {
     // open the database connection
     int result = sqlite3_open(":memory:", &m_db);
@@ -20,7 +32,7 @@ int DB::connect()
     return 0;
 }
 
-bool DB::initialize_database()
+bool sqlModel::initialize_database()
 {
     char* error_message = NULL;
     std::string sql = "CREATE TABLE USERS(" \
@@ -58,7 +70,7 @@ bool DB::initialize_database()
     return true;
 }
 
-int DB::closeDB()
+int sqlModel::disconnect()
 {
     // close the connection if opened
     if (m_db != NULL)
@@ -69,7 +81,7 @@ int DB::closeDB()
     return 1;
 }
 
-bool DB::run_query(std::string& sql, std::vector<userRecord>& records)
+bool sqlModel::runQuery(std::string& sql, std::vector<userRecord>& records)
 {
     // Clear any prior results
     records.clear();
@@ -84,7 +96,7 @@ bool DB::run_query(std::string& sql, std::vector<userRecord>& records)
     return true;
 }
 
-int DB::callback(void* possible_vector, int argc, char** argv, char** azColName)
+int sqlModel::callback(void* possible_vector, int argc, char** argv, char** azColName)
 {
     if (possible_vector == NULL)
     { // no vector passed in, so just display the results

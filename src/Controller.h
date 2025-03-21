@@ -20,7 +20,7 @@ namespace
 class CRUDController 
 {
 public:
-	CRUDController(LoginView& view, DB& model);
+	CRUDController(LoginView& view, sqlModel& model);
 	bool create();
 	bool read();
 	bool update();
@@ -29,5 +29,5 @@ public:
 
 private:
 	LoginView m_view;
-	DB m_model;
+	sqlModel m_model;
 };
