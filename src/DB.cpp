@@ -17,7 +17,6 @@ sqlModel::sqlModel()
  
 }
 
-// 
 int sqlModel::connect()
 {
     // open the database connection
@@ -32,6 +31,10 @@ int sqlModel::connect()
     return 0;
 }
 
+/*
+    initialize_database() is a method to populate the database with dummy data.
+    Should only be used for testing purposes.
+*/
 bool sqlModel::initialize_database()
 {
     char* error_message = NULL;
@@ -80,12 +83,17 @@ int sqlModel::disconnect()
     std::cout << "Closed database connection" << std::endl;
     return 1;
 }
-
+/*
+    runQuery() executes a query against the users table to retrieve one or more 
+    user records. The currently defined schema for the users database is:     
+    [ID][USERNAME][PASSWORD].
+*/
 bool sqlModel::runQuery(std::string& sql, std::vector<userRecord>& records)
 {
     // Clear any prior results
     records.clear();
 
+    // Query DB, if sucessful it will copy userRecords into the argument. 
     char* error_message;
     if (sqlite3_exec(m_db, sql.c_str(), callback, &records, &error_message) != SQLITE_OK)
     {
@@ -96,10 +104,18 @@ bool sqlModel::runQuery(std::string& sql, std::vector<userRecord>& records)
     return true;
 }
 
+/*
+    callback() processes each row returned from the DB into a userRecord
+    @param possible_vector: can be null or point to std::vector<userRecord>
+    @param argc: number of columns in current row
+    @param argv: array of strings containing values for each column in curr row
+    @param azColName: array of strings containing names of each column
+*/
 int sqlModel::callback(void* possible_vector, int argc, char** argv, char** azColName)
 {
+    // If no vector of userRecords is provided, print query results
     if (possible_vector == NULL)
-    { // no vector passed in, so just display the results
+    {
         for (int i = 0; i < argc; i++)
         {
             std::cout << azColName[i] << " = " << (argv[i] ? argv[i] : "NULL") << std::endl;
@@ -108,9 +124,10 @@ int sqlModel::callback(void* possible_vector, int argc, char** argv, char** azCo
     }
     else
     {
-        std::vector< userRecord >* rows =
-            static_cast<std::vector< userRecord > *>(possible_vector);
+        // We only support userRecord at this time
+        std::vector<userRecord>* rows = static_cast<std::vector<userRecord>*>(possible_vector);
 
+        // push each column value into vector
         rows->push_back(std::make_tuple(argv[0], argv[1], argv[2]));
     }
     return 0;
