@@ -25,9 +25,7 @@
 *		   Description: Main application for creating an OpenGL window and rendering different mesh objects
 */
 
-using namespace std;
-
-// Unnamed namespace
+// Local variables and enums
 namespace
 {
 	const char* const WINDOW_TITLE = "CS-499 Capstone";
@@ -58,7 +56,6 @@ namespace
 		CYLINDER,
 		PYRAMID
 	};
-
 
 	CameraModes mode = PERSPECTIVE;
 
@@ -173,11 +170,11 @@ int main(int argc, char* argv[])
 	obj4.m_mesh.translateMesh(glm::vec3(-0.4f, 5.0f, -2.0f));
 	obj5.m_mesh.translateMesh(glm::vec3(-3.0f, 5.1f, 0.0f));
 
-	meshes.emplace_back(make_shared<MeshObject>(obj));
-	meshes.emplace_back(make_shared<MeshObject>(obj2));
-	meshes.emplace_back(make_shared<MeshObject>(obj3));
-	meshes.push_back(make_shared<MeshObject>(obj4));
-	meshes.push_back(make_shared<MeshObject>(obj5));
+	meshes.emplace_back(std::make_shared<MeshObject>(obj));
+	meshes.emplace_back(std::make_shared<MeshObject>(obj2));
+	meshes.emplace_back(std::make_shared<MeshObject>(obj3));
+	meshes.push_back(std::make_shared<MeshObject>(obj4));
+	meshes.push_back(std::make_shared<MeshObject>(obj5));
 
 	static GuiBackend guiBackend{ gWindow };
 	sqlModel model;
@@ -340,7 +337,7 @@ bool UInitialize(int argc, char* argv[], GLFWwindow** window)
 	}*/
 
 	// Displays GPU OpenGL version
-	cout << "INFO: OpenGL Version: " << glGetString(GL_VERSION) << endl;
+	std::cout << "INFO: OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
 	return true;
 
@@ -487,7 +484,7 @@ void UMouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 	break;
 
 	default:
-		cout << "Unhandled mouse button event" << endl;
+		std::cout << "Unhandled mouse button event" << std::endl;
 		break;
 	}
 }
