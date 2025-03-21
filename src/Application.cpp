@@ -67,10 +67,10 @@ namespace
 	Shader lightShader;
 	Shader shaderProgram;
 
-	const char* lampVertexShaderSource = "../../../resources/lampVertex.vs";
-	const char* lampFragmentShaderSource = "../../../resources/lampFrag.fs";
-	const char* cubeVertexShaderSource = "../../../resources/cubeVertex.vs";
-	const char* cubeFragmentShaderSource = "../../../resources/cubeFrag.fs";
+	const char* lampVertexShaderSource = RESOURCES_PATH "lampVertex.vs";
+	const char* lampFragmentShaderSource = RESOURCES_PATH "lampFrag.fs";
+	const char* cubeVertexShaderSource = RESOURCES_PATH "cubeVertex.vs";
+	const char* cubeFragmentShaderSource = RESOURCES_PATH"cubeFrag.fs";
 	
 	std::vector<std::shared_ptr<MeshObject>> meshes;
 }
