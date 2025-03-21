@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "Object.h"
+#include "MeshObject.h"
 #include "GuiBackend.h"
 
 /*
