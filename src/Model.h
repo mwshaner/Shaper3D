@@ -9,8 +9,7 @@
 *		   File: DB.h
 *		   Author: Mason Shaner
 *		   Date: 3/20/2025
-*		   Description:
-*		   The Model interface and class implements the connection to and communication with
+*		   Description: The Model interface and class implements the connection to and communication with
 *          a database. Currently, only in-memory sqlite3 databases are implemented, however
 *          derived classes can be created to support different database systems as needed.
 */

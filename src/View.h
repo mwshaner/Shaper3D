@@ -7,8 +7,7 @@
 *		   File: View.h
 *		   Author: Mason Shaner
 *		   Date: 3/20/2025
-*		   Description:
-*		   The view interface defines the api for an ImGui frontend window. The derived classes 
+*		   Description: The view interface defines the api for an ImGui frontend window. The derived classes 
 *		   LoginView and Meshview each implement different UI's which can be associated with different 
 *          controllers and models. 
 */

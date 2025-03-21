@@ -2,28 +2,27 @@
 #include <cstdlib>
 #include <math.h>
 #include <vector>
-#include <../thirdparty/glad/include/glad/glad.h>
-#include <../thirdparty/glfw-3.3.2/include/GLFW/glfw3.h>
-#include <../thirdparty/glm/glm/glm.hpp>
-#include <../thirdparty/glm/glm/ext/matrix_transform.hpp>
-#include "../thirdparty/imgui-docking/imgui/imgui.h"
-#include "../thirdparty/imgui-docking/imgui/backends/imgui_impl_opengl3.h"
-#include "../thirdparty/imgui-docking/imgui/backends/imgui_impl_glfw.h"
+#include <glad/include/glad/glad.h>
+#include <glfw-3.3.2/include/GLFW/glfw3.h>
+#include <glm/glm/glm.hpp>
+#include <glm/glm/ext/matrix_transform.hpp>
+#include "imgui-docking/imgui/imgui.h"
+#include "imgui-docking/imgui/backends/imgui_impl_opengl3.h"
+#include "imgui-docking/imgui/backends/imgui_impl_glfw.h"
 #include "camera.h" 
 #include "shader.h"
 #include "Mesh.h"
 #include "Material.h"
 #include "Renderer.h"
-#include "DB.h"
+#include "Model.h"
 #include "View.h"
 #include "Controller.h"
 
 /*
-	Application.cpp
-	Author: Mason Shaner
-	Date: 1/26/2024
-	Course: CS-330
-	Description: Main application for creating an OpenGL window and rendering different mesh objects
+*		   File: Application.cpp
+*		   Author: Mason Shaner
+*		   Date: 3/20/2025
+*		   Description: Main application for creating an OpenGL window and rendering different mesh objects
 */
 
 using namespace std;
