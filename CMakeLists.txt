@@ -1,5 +1,3 @@
-#https://github.com/meemknight/cmakeSetup
-
 cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>") #we want to use the static runtime
@@ -11,18 +9,16 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
-add_subdirectory(thirdparty/glfw-3.3.2)			#window oppener
-add_subdirectory(thirdparty/glad)				#opengl loader
-add_subdirectory(thirdparty/stb_image)			#loading immaged
-add_subdirectory(thirdparty/stb_truetype)		#loading ttf files
-add_subdirectory(thirdparty/glm)				#math
-add_subdirectory(thirdparty/imgui-docking)		#ui
+add_subdirectory(thirdparty/glfw-3.3.2)			
+add_subdirectory(thirdparty/glad)				
+add_subdirectory(thirdparty/stb_image)			
+add_subdirectory(thirdparty/stb_truetype)		
+add_subdirectory(thirdparty/glm)			
+add_subdirectory(thirdparty/imgui-docking)	
 
 
 
 
-# Define MY_SOURCES to be a list of all the source files for my game 
-#file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
@@ -41,7 +37,7 @@ target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="../../
 target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${MY_SOURCES}  "src/View.h" "src/Controller.h" "src/View.cpp" "src/Controller.cpp" "src/MeshObject.h" )
 
 
-if(MSVC) # If using the VS compiler...
+if(MSVC)
 
 	target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC _CRT_SECURE_NO_WARNINGS)
 
