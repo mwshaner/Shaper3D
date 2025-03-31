@@ -62,44 +62,46 @@ bool CRUDController::read(const std::string& pass, const std::string& name)
            To avoid the conversion from size_t to int warning I've used a cast,
            but this is only okay because we know exactly how long a query that 
            reaches this part of the code is and it wont exceed INT_MAX.
-       */
-       sqlite3_prepare_v2(
-           m_model.m_db,
-           preparedQuery.c_str(),
-           (int)preparedQuery.length(),
-           &sqlStatement,
-           nullptr
-       );
+    */
+    sqlite3_prepare_v2(
+        m_model.m_db,
+        preparedQuery.c_str(),
+        (int)preparedQuery.length(),
+        &sqlStatement,
+        nullptr
+    );
 
-       /*
-          Bind the user input text into the prepared query.The user input may or may not contain an SQL injection
-          but it will fail either way because the user input is treated as a text variable and is not part of the SQL statement
-       */         
-       sqlite3_bind_text(
-           sqlStatement,
-           1,
-           name.c_str(),
-           (int)preparedQuery.length(),
-           SQLITE_STATIC
-       );
+    /*
+       Bind the user input text into the prepared query.The user input may or may not contain an SQL injection
+       but it will fail either way because the user input is treated as a text variable and is not part of the SQL statement
+    */         
+    sqlite3_bind_text(
+        sqlStatement,
+        1,
+        name.c_str(),
+        (int)preparedQuery.length(),
+        SQLITE_STATIC
+    );
 
-	   sqlite3_bind_text(
-		   sqlStatement,
-		   2,
-		   pass.c_str(),
-		   (int)preparedQuery.length(),
-		   SQLITE_STATIC
-	   );
+	sqlite3_bind_text(
+		sqlStatement,
+		2,
+		pass.c_str(),
+		(int)preparedQuery.length(),
+		SQLITE_STATIC
+	);
 
-	   // the final query value
-	   std::string query = sqlite3_expanded_sql(sqlStatement);
+	// the final query value
+	std::string query = sqlite3_expanded_sql(sqlStatement);
 
+
+	// A sucessful query means not DB errors, not a sucessful login
 	bool result = m_model.runQuery(query, records);
 
-	
-	for (auto record : records)
+	// Unsuccessful login
+	if (records.empty())
 	{
-		std::cout << "User: " << std::get<1>(record) << " ID = " << std::get<0>(record) << " PASSWORD = " << std::get<2>(record) << " " << std::endl;
+		result = false;
 	}
 
 	// Destroy statement
