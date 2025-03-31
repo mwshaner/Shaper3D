@@ -32,7 +32,7 @@ public:
 	bool initialize_database();
 	int disconnect() override;
 	static int callback(void* possible_vector, int argc, char** argv, char** azColName);
-	bool runQuery(std::string& sql, std::vector< userRecord >& records);
+	bool runQuery(std::string& sql, std::vector<userRecord>& records);
 
 private:
 	sqlite3* m_db;

@@ -15,8 +15,9 @@
 ---------------------------------------------------------------------------------------------------------
 */
 
-LoginView::LoginView(GuiBackend backend)
-    : m_guiBackend{ backend },
+LoginView::LoginView(GuiBackend backend, CRUDController controller)
+    : m_controller{ controller },
+	  m_guiBackend{ backend },
       m_loginStatus{ false }
 {
 
@@ -80,6 +81,10 @@ bool LoginView::loginWindow()
 		storedPassword = password;
 
 		storedPassword = storedPassword.c_str();
+		storedUsername = storedUsername.c_str();
+
+
+		m_controller.read(storedPassword, storedUsername);
 		//showErr = storedPassword == pass ? true : false;
 		if (storedPassword != pass)
 		{

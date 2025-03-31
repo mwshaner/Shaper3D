@@ -2,6 +2,7 @@
 #include <iostream>
 #include "MeshObject.h"
 #include "GuiBackend.h"
+#include "Controller.h"
 
 /*
 *		   File: View.h
@@ -32,7 +33,7 @@ public:
 class LoginView : public IView
 {
 public:
-	LoginView(GuiBackend backend);
+	LoginView(GuiBackend backend, CRUDController controller);
 	void render() override;
 	bool loginWindow();
 	bool createAccountWindow();
@@ -40,6 +41,7 @@ public:
 
 private:
 	GuiBackend m_guiBackend;
+	CRUDController m_controller;
 	bool m_loginStatus;
 };
 

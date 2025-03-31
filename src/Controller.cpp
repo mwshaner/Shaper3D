@@ -16,9 +16,8 @@
 -------------------------------------------------------------------------------------------------------
 */
 
-CRUDController::CRUDController(LoginView& view, sqlModel& model)
-	: m_view{ view },
-	  m_model{ model }
+CRUDController::CRUDController(sqlModel& model)
+	: m_model{ model }
 {
 	m_model.connect();
 
@@ -40,16 +39,15 @@ CRUDController::CRUDController(LoginView& view, sqlModel& model)
 }
 
 
-bool CRUDController::create()
+bool CRUDController::create(const std::string& pass, const std::string& name)
 {
-	// TODO: implement create user query
+	std::cout << pass << " " << name << std::endl;
 	return false;
 }
 
 
-bool CRUDController::read()
+bool CRUDController::read(const std::string& pass, const std::string& name)
 {
-	//TODO: implement login query
 
 	std::vector<userRecord> records;
 	std::string sql = "SELECT * FROM USERS WHERE USERNAME = 'Mason' AND PASSWORD = '12345'";

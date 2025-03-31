@@ -178,8 +178,9 @@ int main(int argc, char* argv[])
 
 	static GuiBackend guiBackend{ gWindow };
 	sqlModel model;
-	LoginView loginView{ guiBackend };
-	CRUDController loginCntlr{ loginView, model };
+	CRUDController loginCntlr{ model };
+	LoginView loginView{ guiBackend, loginCntlr };
+
 	MeshView meshView{ guiBackend, meshes };
 
 	// RENDER LOOP START
@@ -190,8 +191,7 @@ int main(int argc, char* argv[])
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;	
 
-		// Process user input
-		UProcessInput(gWindow);
+		
 
 		// Enable z-depth
 		glEnable(GL_DEPTH_TEST);
@@ -202,6 +202,9 @@ int main(int argc, char* argv[])
 			
 		if (loginView.getLoginStatus())
 		{
+			// Process user input
+			UProcessInput(gWindow);
+
 			// Apply all transformations
 			//table.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f)));
 			//coaster.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 3.0f)));

@@ -1,5 +1,4 @@
 #pragma once
-#include "View.h"
 #include "Model.h"
 #include <iostream>
 
@@ -19,14 +18,13 @@ namespace
 class CRUDController 
 {
 public:
-	CRUDController(LoginView& view, sqlModel& model);
-	bool create();
-	bool read();
+	CRUDController(sqlModel& model);
+	bool create(const std::string& pass, const std::string& name);
+	bool read(const std::string& pass, const std::string& name);
 	bool update();
 	bool deleteUser(); // delete is a keyword
 	void closeConnection();
 
 private:
-	LoginView m_view;
 	sqlModel m_model;
 };
