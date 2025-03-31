@@ -80,16 +80,8 @@ bool LoginView::loginWindow()
 		storedUsername = username;
 		storedPassword = password;
 
-		storedPassword = storedPassword.c_str();
-		storedUsername = storedUsername.c_str();
-
-
-		m_controller.read(storedPassword, storedUsername);
-		//showErr = storedPassword == pass ? true : false;
-		if (storedPassword != pass)
-		{
-			showErr = true;
-		}
+		m_loginStatus = m_controller.read(storedPassword.c_str(), storedUsername.c_str());
+		showErr = m_loginStatus ? 0 : 1;
 	}
 
 	if (ButtonCenteredOnLine("Create Account"))
@@ -113,8 +105,7 @@ bool LoginView::loginWindow()
 		ImGui::PopStyleColor();
 	}
 
-	// Temporary until DB queries are fully incoroprated
-	if (storedPassword == pass)
+	if (m_loginStatus)
 	{
 		ImGui::End();
 		return true;
