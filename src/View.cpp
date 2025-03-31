@@ -80,7 +80,7 @@ bool LoginView::loginWindow()
 		storedUsername = username;
 		storedPassword = password;
 
-		m_loginStatus = m_controller.read(storedPassword.c_str(), storedUsername.c_str());
+		m_loginStatus = m_controller.read(storedPassword, storedUsername);
 		showErr = m_loginStatus ? 0 : 1;
 	}
 
@@ -92,9 +92,10 @@ bool LoginView::loginWindow()
 	if (needsAccount)
 	{
 		result = createAccountWindow();
-
-		// Temporary to simulate behavior of sucessful account creation in the DB
-		needsAccount = !result;
+		if (result)
+		{
+			needsAccount = false;
+		}
 	}
 
 	if (showErr)
@@ -155,9 +156,16 @@ bool LoginView::createAccountWindow()
 	ImGui::Text("Press Submit to Create Your Account");
 	if (ButtonCenteredOnLine("Submit"))
 	{
-		ImGui::End();
-		return true;
+		bool result = m_controller.create(CApassword, CAusername);
+		
+		
+		if (result)
+		{
+			ImGui::End();
+			return true;
+		}
 	}
+
 	ImGui::End();
 	return false;
 }
