@@ -48,13 +48,7 @@ bool CRUDController::create(const std::string& pass, const std::string& name)
 	sqlite3_stmt* sqlStatement;
 
 	/*
-		   Create the prepared statement using the prepared query
-
-		   NOTE: for some reason whoever wrote the sqlite3_prepare_v2()
-		   decided to make the string length argument a signed int.
-		   To avoid the conversion from size_t to int warning I've used a cast,
-		   but this is only okay because we know exactly how long a query that
-		   reaches this part of the code is and it wont exceed INT_MAX.
+		Create the prepared statement using the prepared query
 	*/
 	sqlite3_prepare_v2(
 		m_model.m_db,
@@ -105,14 +99,8 @@ bool CRUDController::read(const std::string& pass, const std::string& name)
 	sqlite3_stmt* sqlStatement;
 
 	/*
-           Create the prepared statement using the prepared query
-           
-           NOTE: for some reason whoever wrote the sqlite3_prepare_v2()
-           decided to make the string length argument a signed int.
-           To avoid the conversion from size_t to int warning I've used a cast,
-           but this is only okay because we know exactly how long a query that 
-           reaches this part of the code is and it wont exceed INT_MAX.
-    */
+         Create the prepared statement using the prepared query         
+     */
     sqlite3_prepare_v2(
         m_model.m_db,
         preparedQuery.c_str(),
