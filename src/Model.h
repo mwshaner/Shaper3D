@@ -6,7 +6,7 @@
 #include "sqlite3.h"
 
 /*
-*		   File: DB.h
+*		   File: Model.h
 *		   Author: Mason Shaner
 *		   Date: 3/20/2025
 *		   Description: The Model interface and class implements the connection to and communication with
