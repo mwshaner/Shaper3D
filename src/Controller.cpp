@@ -24,7 +24,7 @@ CRUDController::CRUDController(sqlModel& model)
 	// loads dummy data to an in memory sqlite3 db
 	m_model.initialize_database();
 
-	std::vector<userRecord> records;
+	/*std::vector<userRecord> records;
 	std::string sql = "SELECT * FROM USERS";
 
 	bool result = m_model.runQuery(sql, records);
@@ -35,7 +35,7 @@ CRUDController::CRUDController(sqlModel& model)
 		std::cout << "User: " << std::get<1>(record) << " ID = " << std::get<0>(record) << " PASSWORD = " << std::get<2>(record) << " " << std::endl;
 	}
 	std::cout << std::endl;
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 }
 
 
