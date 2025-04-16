@@ -191,8 +191,6 @@ int main(int argc, char* argv[])
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;	
 
-		
-
 		// Enable z-depth
 		glEnable(GL_DEPTH_TEST);
 
@@ -211,11 +209,6 @@ int main(int argc, char* argv[])
 
 			// draw the lights
 			renderer.drawLights(shaderProgram, camera);
-
-			// Draw all of the mesh objects
-			//Material coasterMat(glm::vec3(0.25f, 0.20725f, 0.20725f), glm::vec3(1.0f, 0.829f, 0.829f), glm::vec3(0.296648f, 0.296648f, 0.296648f), 1.5f);
-			//renderer.drawMesh(soda, shaderProgram, camera, sodaMat);
-			//renderer.drawMesh(coaster, shaderProgram, camera, coasterMat);
 
 			for (auto& object : meshes)
 			{
