@@ -205,27 +205,6 @@ int main(int argc, char* argv[])
 			// Process user input
 			UProcessInput(gWindow);
 
-			// Apply all transformations
-			//table.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f)));
-			//coaster.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 3.0f)));
-			//coaster.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -1.9f, 0.0f)));
-			//soda.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0, 1.0f, 0.0f)));
-			//soda.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.2f, 0.0f)));
-			//chapstick.scaleMesh(glm::scale(glm::mat4(1.0f), glm::vec3(0.4f, 0.4f, 0.4f)));
-			//chapstick.rotateMesh(glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-			//chapstick.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -1.6f, -2.0f)));
-			//kiss.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, -1.5f, 0.0f)));
-			//rubikscube.translateMesh(glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, -1.5f, 0.0f)));
-			//wall1.rotateMesh(glm::rotate(glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-			//wall1.translateMesh(glm::translate(glm::vec3(-30.0f, 28.0f, 0.0f)));
-
-			//wall2.rotateMesh(glm::rotate(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)));
-			//wall2.rotateMesh(glm::rotate(glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)));
-			//wall2.rotateMesh(glm::rotate(glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-			//wall2.translateMesh(glm::translate(glm::vec3(0.0f, 28.0f, -30.0f)));
-
-		
-
 			// Send the view and projection matrices to the shader
 			shaderProgram.setMat4("view", camera.GetViewMatrix());
 			shaderProgram.setMat4("projection", UGetProjectionMatrix());
@@ -242,28 +221,6 @@ int main(int argc, char* argv[])
 			{
 				renderer.drawMesh(object->m_mesh, shaderProgram, camera, object->m_mat);
 			}
-
-			//renderer.drawMesh(obj.m_mesh, shaderProgram, camera, obj.m_mat);
-			//renderer.drawMesh(obj2.m_mesh, shaderProgram, camera, obj2.m_mat);
-
-
-			//Material kissMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.25f);
-			//renderer.drawMesh(kiss, shaderProgram, camera, kissMat);
-
-			//Material tableMat(glm::vec3(0.24725f, 0.1995f, 0.0745f), glm::vec3(0.75164f, 0.60648f, 0.22648f), glm::vec3(1.0f, 1.0f, 1.0f), 2.0f);
-			//renderer.drawMesh(table, shaderProgram, camera, tableMat);
-
-			//Material chapstickMat(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.01f, 0.01f, 0.01f), glm::vec3(0.5f, 0.5f, 0.5f), 0.25f);
-			//renderer.drawMesh(chapstick, shaderProgram, camera, chapstickMat);
-
-			//Material rubikscubeMat(glm::vec3(1.0f, 0.5f, 0.31f), glm::vec3(1.0f, 0.5f, 0.31f), glm::vec3(0.5f, 0.5f, 0.5f), 0.25f);
-			//renderer.drawMesh(rubikscube, shaderProgram, camera, rubikscubeMat);
-
-			/*Material wall1Mat(glm::vec3(0.24725f, 0.1995f, 0.0745f), glm::vec3(0.75164f, 0.60648f, 0.22648f), glm::vec3(1.0f, 1.0f, 1.0f), 2.0f);
-			renderer.drawMesh(wall1, shaderProgram, camera, wall1Mat);
-
-			Material wall2Mat(glm::vec3(0.24725f, 0.1995f, 0.0745f), glm::vec3(0.75164f, 0.60648f, 0.22648f), glm::vec3(1.0f, 1.0f, 1.0f), 2.0f);
-			renderer.drawMesh(wall2, shaderProgram, camera, wall2Mat);*/
 
 			meshView.render();
 		}
