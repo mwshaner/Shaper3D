@@ -1,7 +1,7 @@
 # Shaper3D
 ![Shaper3D Banner](assets/banner.png)
 
-**Shaper3D** is an OpenGL graphics application that allows users to view and manipulate primitive meshes and their texture and material properties.
+**Shaper3D** is a simple 3D model viewer built for the purpose of learning more about graphics programming with OpenGL and ImGui.
 
 ## Build Instructions
 
